@@ -55,6 +55,7 @@ def encrypt(filein, fileout, key, bs):
         with open(fileout, 'wb') as outfile:
             outfile.write(struct.pack('<Q', filesize))
             outfile.write(iv)
+            outfile.write(cipher.encrypt("Arguing that you don't care abou"))
             while True:
                 chunk = infile.read(bs)
                 if len(chunk) == 0:
@@ -68,8 +69,11 @@ def decrypt(filein, fileout, key, bs):
     key2 = hashlib.sha256(key.encode()).digest()
     with open(filein, 'rb') as infile:
         origsize = struct.unpack('<Q', infile.read(struct.calcsize('Q')))[0]
-        iv = infile.read(16)        
+        iv = infile.read(16)
         cipher = AES.new(key2, AES.MODE_CBC, iv)
+        if(cipher.decrypt(infile.read(32))!="Arguing that you don't care abou"):
+            print("fuyoal: Wrong key!")
+            return(-1)
         with open(fileout, 'wb') as outfile:
             while True:
                 chunk = infile.read(bs)
