@@ -9,14 +9,16 @@ from random import gauss
 
 
 def main(argv):
-    if("-e" in argv):
+    if("-h" in argv):
+        usage()
+    elif(argv[0] == "-e"):
         if(len(argv)==3):
             encrypt_file1(argv[1],argv[2])
         elif(len(argv)==5):
             encrypt_file2(argv[1],argv[2],argv[3],argv[4])
         else:
             usage()
-    elif("-d" in argv):
+    elif(argv[0] == "-d"):
         if(len(argv)==3):
             decrypt_file(argv[1],argv[2])
         else:
@@ -137,8 +139,12 @@ def encrypt(filein, fileout, key, bs):
 def decrypt(filein, fileout, keya, bs):
     key = hashlib.sha256(keya.encode()).digest()
     with open(filein, 'rb') as infile:
-        f1size = int(infile.read(32))
-        
+        try:
+            f1size = int(infile.read(32))
+        except:
+            print("fuyoal: Input error!")
+            return(-1)
+            
         iv = infile.read(AES.block_size)
         cipher = AES.new(key, AES.MODE_CBC, iv)
         if(cipher.decrypt(infile.read(32))=="Arguing that you don't care abou"):
