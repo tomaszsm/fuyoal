@@ -1,9 +1,12 @@
+import binascii
 import hashlib
 import os
 import shutil
 import sys
 from Crypto import Random
 from Crypto.Cipher import AES
+from random import gauss
+
 
 def main(argv):
     if("-e" in argv):
@@ -38,7 +41,17 @@ def encrypt_file1(filein,key):
     if(not os.path.isfile(filein)):
         print("fuyoal: File " + filein + " does not exist!")
         return(-1)
-    encrypt(filein, filein+".fya", key, 32)
+    orginfsize = os.path.getsize(filein)
+    phonyfsize = randomsize(orginfsize, orginfsize*.1, orginfsize*.3)
+    iterator = 0
+    while(os.path.isfile("fuyoaltemp"+str(iterator))):
+        iterator += 1
+    phonyfile = "fuyoaltemp"+str(iterator)
+    with open(phonyfile, 'wb') as outfile:
+        for i in xrange(phonyfsize):
+            outfile.write("0")
+    encrypt_file2(filein,key,phonyfile,binascii.b2a_base64(Random.get_random_bytes(32))[:32])
+    os.remove(phonyfile)
 
     
 def encrypt_file2(filein1,key1,filein2,key2):
@@ -64,11 +77,10 @@ def encrypt_file2(filein1,key1,filein2,key2):
     f1size = "0"*(32-len(f1size)) + f1size
 
     outfile = filein1+".fya"
-    destination = open(outfile,'wb')
-    destination.write(f1size)
-    shutil.copyfileobj(open(fileout1,'rb'), destination)
-    shutil.copyfileobj(open(fileout2,'rb'), destination)
-    destination.close()
+    with open(outfile, 'wb') as destination:
+        destination.write(f1size)
+        shutil.copyfileobj(open(fileout1,'rb'), destination)
+        shutil.copyfileobj(open(fileout2,'rb'), destination)
     os.remove(fileout1)
     os.remove(fileout2)
     
@@ -82,6 +94,14 @@ def decrypt_file(filein,key):
         fileout = filein+".dec"
     print(decrypt(filein, fileout, key, 32))
 
+
+def randomsize(size,par1,par2):
+    ret = gauss(size,par1)
+    while(abs(ret-size) > par2):
+        ret = gauss(size,par1)
+    return(int(round(ret)))
+    
+    
 def pad(s,bs):
     return(s + (bs - len(s) % bs) * chr(bs - len(s) % bs))
 
@@ -89,9 +109,9 @@ def unpad(s):
     return(s[0:-ord(s[-1])])
     
 def encrypt(filein, fileout, key, bs):
-    key2 = hashlib.sha256(key.encode()).digest()
+    key = hashlib.sha256(key.encode()).digest()
     iv = Random.new().read(AES.block_size)
-    cipher = AES.new(key2, AES.MODE_CBC, iv)
+    cipher = AES.new(key, AES.MODE_CBC, iv)
     filesize = os.path.getsize(filein)
     breakafter = False
     with open(filein, 'rb') as infile:
