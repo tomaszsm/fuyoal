@@ -69,8 +69,8 @@ def encrypt_file2(filein1,key1,filein2,key2):
     shutil.copyfileobj(open(fileout1,'rb'), destination)
     shutil.copyfileobj(open(fileout2,'rb'), destination)
     destination.close()
-    # os.remove(fileout1)
-    # os.remove(fileout2)
+    os.remove(fileout1)
+    os.remove(fileout2)
     
 def decrypt_file(filein,key):
     if(not os.path.isfile(filein)):
@@ -80,7 +80,7 @@ def decrypt_file(filein,key):
         fileout = filein[:-4]
     else:
         fileout = filein+".dec"
-    print(decrypt(filein, fileout, key, 32, True))
+    print(decrypt(filein, fileout, key, 32))
 
 def pad(s,bs):
     return(s + (bs - len(s) % bs) * chr(bs - len(s) % bs))
@@ -105,6 +105,7 @@ def encrypt(filein, fileout, key, bs):
                     breakafter = True
                     chunk = pad("",bs)
                 elif(len(chunk) % bs != 0):
+                    breakafter = True
                     chunk = pad(chunk,bs)
                 blockcounter += 1
                 outfile.write(cipher.encrypt(chunk))
@@ -113,21 +114,33 @@ def encrypt(filein, fileout, key, bs):
     return(blockcounter)
 
                 
-def decrypt(filein, fileout, key, bs, oneblock):
-    key2 = hashlib.sha256(key.encode()).digest()
+def decrypt(filein, fileout, keya, bs):
+    key = hashlib.sha256(keya.encode()).digest()
     with open(filein, 'rb') as infile:
+        f1size = int(infile.read(32))
+        
         iv = infile.read(AES.block_size)
-        cipher = AES.new(key2, AES.MODE_CBC, iv)
-        # f1size = infile.read(32)
-        if(cipher.decrypt(infile.read(32))!="Arguing that you don't care abou"):
-            print("fuyoal: Wrong key!")
-            return(-1)
+        cipher = AES.new(key, AES.MODE_CBC, iv)
+        if(cipher.decrypt(infile.read(32))=="Arguing that you don't care abou"):
+            decryptfile = 0
+        else:
+            infile.seek(32 + AES.block_size + (f1size+1)*bs, 0)
+            iv = infile.read(AES.block_size)
+            cipher = AES.new(key, AES.MODE_CBC, iv)
+            if(cipher.decrypt(infile.read(32))=="Arguing that you don't care abou"):
+                decryptfile = 1
+            else:
+                print("fuyoal: Wrong key!")
+                return(-1)
+        
         with open(fileout, 'wb') as outfile:
             chunk = infile.read(bs)
+            iterator = 0
             while True:
+                iterator += 1
                 nextchunk = infile.read(bs)
-                if(len(nextchunk)==0):
-                    outfile.write(cipher.decrypt(unpad(chunk)))
+                if(len(nextchunk)==0 or (decryptfile==0 and iterator>=f1size)):
+                    outfile.write(unpad(cipher.decrypt(chunk)))
                     break
                 else:
                     outfile.write(cipher.decrypt(chunk))
