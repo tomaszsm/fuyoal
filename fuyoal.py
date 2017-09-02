@@ -1,7 +1,6 @@
 import hashlib
 import os
 import shutil
-import struct
 import sys
 from Crypto import Random
 from Crypto.Cipher import AES
@@ -83,48 +82,56 @@ def decrypt_file(filein,key):
         fileout = filein+".dec"
     print(decrypt(filein, fileout, key, 32, True))
 
+def pad(s,bs):
+    return(s + (bs - len(s) % bs) * chr(bs - len(s) % bs))
 
+def unpad(s):
+    return(s[0:-ord(s[-1])])
+    
 def encrypt(filein, fileout, key, bs):
     key2 = hashlib.sha256(key.encode()).digest()
     iv = Random.new().read(AES.block_size)
     cipher = AES.new(key2, AES.MODE_CBC, iv)
     filesize = os.path.getsize(filein)
+    breakafter = False
     with open(filein, 'rb') as infile:
         with open(fileout, 'wb') as outfile:
-            outfile.write(struct.pack('<Q', filesize))
             outfile.write(iv)
             outfile.write(cipher.encrypt("Arguing that you don't care abou"))
             blockcounter = 0
             while True:
                 chunk = infile.read(bs)
                 if(len(chunk) == 0):
-                    break
+                    breakafter = True
+                    chunk = pad("",bs)
                 elif(len(chunk) % bs != 0):
-                    chunk += ' ' * (bs - len(chunk) % bs)
+                    chunk = pad(chunk,bs)
                 blockcounter += 1
                 outfile.write(cipher.encrypt(chunk))
+                if(breakafter):
+                    break
     return(blockcounter)
 
                 
 def decrypt(filein, fileout, key, bs, oneblock):
     key2 = hashlib.sha256(key.encode()).digest()
     with open(filein, 'rb') as infile:
-        origsize = struct.unpack('<Q', infile.read(struct.calcsize('Q')))[0]
-        iv = infile.read(16)    # AES.block_size ?
+        iv = infile.read(AES.block_size)
         cipher = AES.new(key2, AES.MODE_CBC, iv)
-        f1size = infile.read(32)
+        # f1size = infile.read(32)
         if(cipher.decrypt(infile.read(32))!="Arguing that you don't care abou"):
             print("fuyoal: Wrong key!")
             return(-1)
         with open(fileout, 'wb') as outfile:
+            chunk = infile.read(bs)
             while True:
-                chunk = infile.read(bs)
-                if(oneblock):
-                    return(cipher.decrypt(chunk))
-                if(len(chunk)==0):
+                nextchunk = infile.read(bs)
+                if(len(nextchunk)==0):
+                    outfile.write(cipher.decrypt(unpad(chunk)))
                     break
-                outfile.write(cipher.decrypt(chunk))
-            outfile.truncate(origsize)
+                else:
+                    outfile.write(cipher.decrypt(chunk))
+                    chunk = nextchunk
 
             
 if __name__ == "__main__":
