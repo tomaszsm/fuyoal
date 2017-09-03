@@ -1,21 +1,16 @@
 import wx
+from core import *
 
 class Frame(wx.Frame):
     def __init__(self):
         wx.Frame.__init__(self, None, title="Fuyoal", size=wx.Size(550,300))
 
-    #     self.panel = wx.Panel(self, wx.ID_ANY)
-
-    #     openFileDlgBtn = wx.Button(self.panel, label="Show OPEN FileDialog")
-    #     openFileDlgBtn.Bind(wx.EVT_BUTTON, self.onOpenFile)
-    
-    
         self.SetSizeHintsSz(wx.DefaultSize, wx.DefaultSize)
 		
         self.m_panel2 = wx.Panel(self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL)
         bSizer1 = wx.BoxSizer(wx.VERTICAL)
 
-        sbSizer1 = wx.StaticBoxSizer(wx.StaticBox(self.m_panel2, wx.ID_ANY, u"First input file"), wx.HORIZONTAL)
+        sbSizer1 = wx.StaticBoxSizer(wx.StaticBox(self.m_panel2, wx.ID_ANY, u"First input file (for encryption or decrypion)"), wx.HORIZONTAL)
 
         self.m_button3 = wx.Button(sbSizer1.GetStaticBox(), wx.ID_ANY, u"Find file", wx.DefaultPosition, wx.DefaultSize, 0)
         self.m_button3.Bind(wx.EVT_BUTTON, self.onOpenFile1)
@@ -30,7 +25,6 @@ class Frame(wx.Frame):
 
         self.m_textCtrl2 = wx.TextCtrl(sbSizer1.GetStaticBox(), wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size(150,-1), wx.TE_PASSWORD)
         sbSizer1.Add(self.m_textCtrl2, 0, wx.ALL, 5)
-
 
         bSizer1.Add(sbSizer1, 1, wx.ALL | wx.EXPAND, 5)
 
@@ -47,14 +41,13 @@ class Frame(wx.Frame):
         self.m_staticText4.Wrap(-1)
         bSizer6.Add(self.m_staticText4, 0, wx.ALL, 5)
 
-
         bSizer1.Add(bSizer6, 1, wx.EXPAND, 5)
 
         self.m_checkBox2 = wx.CheckBox(self.m_panel2, wx.ID_ANY, u"Include second file", wx.DefaultPosition, wx.DefaultSize, 0)
         self.Bind(wx.EVT_CHECKBOX, self.onCheck) 
         bSizer1.Add(self.m_checkBox2, 0, wx.ALL, 5)
 
-        sbSizer3 = wx.StaticBoxSizer(wx.StaticBox(self.m_panel2, wx.ID_ANY, u"Second input file"), wx.HORIZONTAL)
+        sbSizer3 = wx.StaticBoxSizer(wx.StaticBox(self.m_panel2, wx.ID_ANY, u"Second input file (for encryption)"), wx.HORIZONTAL)
 
         self.m_button4 = wx.Button(sbSizer3.GetStaticBox(), wx.ID_ANY, u"Find file", wx.DefaultPosition, wx.DefaultSize, 0)
         self.m_button4.Bind(wx.EVT_BUTTON, self.onOpenFile2)
@@ -76,20 +69,19 @@ class Frame(wx.Frame):
 
         sbSizer3.Add(self.m_textCtrl4, 0, wx.ALL, 5)
 
-
         bSizer1.Add(sbSizer3, 1, wx.ALL | wx.EXPAND, 5)
 
-        bSizer14 = wx.BoxSizer( wx.HORIZONTAL )
+        bSizer14 = wx.BoxSizer(wx.HORIZONTAL)
 	
-	self.m_button5 = wx.Button( self.m_panel2, wx.ID_ANY, u"Encrypt", wx.DefaultPosition, wx.DefaultSize, 0 )
+	self.m_button5 = wx.Button(self.m_panel2, wx.ID_ANY, u"Encrypt", wx.DefaultPosition, wx.DefaultSize, 0)
+        self.m_button5.Bind(wx.EVT_BUTTON, self.onEncrypt)
 	bSizer14.Add( self.m_button5, 0, wx.ALL, 5 )
 	
-	self.m_button6 = wx.Button( self.m_panel2, wx.ID_ANY, u"Decrypt", wx.DefaultPosition, wx.DefaultSize, 0 )
-	bSizer14.Add( self.m_button6, 0, wx.ALL, 5 )
-		
-		
+	self.m_button6 = wx.Button(self.m_panel2, wx.ID_ANY, u"Decrypt", wx.DefaultPosition, wx.DefaultSize, 0)
+        self.m_button6.Bind(wx.EVT_BUTTON, self.onDecrypt)
+	bSizer14.Add(self.m_button6, 0, wx.ALL, 5)
+				
 	bSizer1.Add( bSizer14, 1, wx.EXPAND, 5 )
-
 
         self.m_panel2.SetSizer(bSizer1)
         self.m_panel2.Layout()
@@ -108,7 +100,6 @@ class Frame(wx.Frame):
         if dlg.ShowModal() == wx.ID_OK:
             path = dlg.GetPath()
             self.m_textCtrl1.SetLabel(path)
-            print("Warning")
         dlg.Destroy()
 
     def onOpenFile2(self, event):
@@ -121,7 +112,6 @@ class Frame(wx.Frame):
         if dlg.ShowModal() == wx.ID_OK:
             path = dlg.GetPath()
             self.m_textCtrl3.SetLabel(path)
-            print("Warning")
         dlg.Destroy()
 
     def onCheck(self, event):
@@ -137,7 +127,83 @@ class Frame(wx.Frame):
             self.m_textCtrl4.Enable(False)
             self.m_textCtrl5.Enable()
 
-    
+    def onEncrypt(self, event):
+        if(self.m_textCtrl1.GetValue()==""):
+            self.Warn("Please specify file 1!")
+            return(-1)
+        if(not os.path.isfile(self.m_textCtrl1.GetValue())):
+            self.Warn("File " + self.m_textCtrl1.GetValue() + " does not exist!")
+            return(-1)
+        if(self.m_textCtrl2.GetValue()==""):
+            self.Warn("Key 1 is empty - it is extremmely insecure!")
+            return(-1)
+        # Encrypt 2 files
+        if(self.m_checkBox2.GetValue()):
+            if(self.m_textCtrl3.GetValue()==""):
+                self.Warn("Please specify file 2!")
+                return(-1)
+            if(not os.path.isfile(self.m_textCtrl3.GetValue())):
+                self.Warn("File " + self.m_textCtrl3.GetValue() + " does not exist!")
+                return(-1)
+            if(self.m_textCtrl4.GetValue()==""):
+                self.Warn("Key 2 is empty - it is extremmely insecure!")
+                return(-1)
+            if(self.m_textCtrl2.GetValue()==self.m_textCtrl4.GetValue()):
+                self.Warn("Key 1 is same as key 2 - this is situation which is unfortunate for many reasons!")
+                return(-1)
+            ret = encrypt_file2(self.m_textCtrl1.GetValue(),self.m_textCtrl2.GetValue(),self.m_textCtrl3.GetValue(),self.m_textCtrl4.GetValue())
+            if(ret==0):
+                self.Info("Files encrypted.")
+            else:
+                self.Warn("Something went wrong!")
+        # Encrypt 1 file
+        else:
+            if(self.m_textCtrl5.GetValue()=="default"):
+                ret = encrypt_file1(self.m_textCtrl1.GetValue(),self.m_textCtrl2.GetValue(),False)
+                if(ret==0):
+                    self.Info("File encrypted.")
+                else:
+                    self.Warn("Something went wrong!")
+            else:
+                try:
+                    sizealt = int(self.m_textCtrl5.GetValue())
+                except:
+                    self.Warn("Wrong size parameter!")
+                    return(-1)
+                ret = encrypt_file1(self.m_textCtrl1.GetValue(),self.m_textCtrl2.GetValue(),sizealt)
+                if(ret==0):
+                    self.Info("File encrypted.")
+                else:
+                    self.Warn("Something went wrong!")
+
+    def onDecrypt(self, event):
+        if(self.m_textCtrl1.GetValue()==""):
+            self.Warn("Please specify file 1!")
+            return(-1)
+        if(not os.path.isfile(self.m_textCtrl1.GetValue())):
+            self.Warn("File " + self.m_textCtrl1.GetValue() + " does not exist!")
+            return(-1)
+        ret = decrypt_file(self.m_textCtrl1.GetValue(),self.m_textCtrl2.GetValue())
+        if(ret==0):
+            self.Info("File decrypted.")
+        elif(ret==-2):
+            self.Warn("Wrong key!")
+        elif(ret==-3):
+            self.Warn("Wrong input file!")
+        else:
+            self.Warn("Something went wrong!")
+                    
+    def Info(parent, message, caption = 'Fuyoal'):
+        dlg = wx.MessageDialog(parent, message, caption, wx.OK | wx.ICON_INFORMATION)
+        dlg.ShowModal()
+        dlg.Destroy()
+        
+    def Warn(parent, message, caption = 'Error'):
+        dlg = wx.MessageDialog(parent, message, caption, wx.OK | wx.ICON_WARNING)
+        dlg.ShowModal()
+        dlg.Destroy()
+
+
 app = wx.App(redirect=True)
 top = Frame()
 top.Show()
