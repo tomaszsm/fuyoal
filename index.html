@@ -10,14 +10,105 @@
     
     <ul>
       <li><a href="#about">About Fuyoal</a></li>
-      <li><a href="#rationale">Rationale</a></li>
+      <li><a href="#working">Working</a></li>
+      <li><a href="#licence">Licence</a></li>
       <li><a href="#kl">Known liabilities</a></li>
+      <li><a href="#usage">Usage</a></li>
       <li><a href="#download">Download</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
+
+    <h2><a name="about">About Fuyoal</a></h2>
+    <p>In many countries <a href="https://en.wikipedia.org/wiki/Key_disclosure_law">key disclosure law</a> requires
+      individuals to reveal their encryption keys to police and other law enforcement agencies. Refusal can lead to
+      serious measures taken against individual. One way to avoid this constraint is to make it impossible to proof that
+      the concealed content exists at all.</p>
+
+    <p><a href="https://en.wikipedia.org/wiki/Deniable_encryption">Deniable encryption</a> refers to a situation when
+      adversary can not prove that concealed content exists. Most commonly discussed form of deniable encryption
+      is <a href="https://en.wikipedia.org/wiki/Steganography">steganography</a>. This technique fits for some uses but
+      is not adequate for general purposes. Firstly because it usually takes much larger content to hide the target
+      one. Secondly because plain steganography dos not
+      fulfill <a href="https://en.wikipedia.org/wiki/Kerckhoffs%27s_principle">Kerckhoffs's principle</a>.</p>
+
+    <p>More versatile deniable encryption tools include low level hiding techniques like creating multiple encrypted
+      disk volumes within a container volume. These tools are difficult to use in portable form or in general without
+      deep integration with computer operational system. Fuyoal is software which allows encryption of confidential
+      content jointly with facade content that user is inclined to reveal. As the software can also be used to encrypt
+      single content the adversary is not able to proof existence of concealed subject.</p>
+
+    <h2><a name="working">Working</a></h2>
+    ---
     
-    Known liabilities
-    - distribution of differences
+    <h2><a name="licence">Licence</a></h2>
+    The program is available under <a href="https://opensource.org/licenses/GPL-3.0">GNU General Public License version 3</a>.
+        
+    <h2><a name="kl">Known liabilities</a></h2>
+    --- distribution of differences
+    
+    <h2><a name="usage">Usage</a></h2>
+    <p>Fuyoal is to be used as follows:</p>
+    <pre>
+    Usage:
+      fuyoal -h
+      fuyoal -e file1 key1 [-s size] | [file2 key2]
+      fuyoal -d file key1 | key2
+    
+    Options:
+      -h        Shows help message
+      -e        Ensrypts file1 with key1 and possibly file2 with key2
+      -s        Specify size of phony second file (in bytes)
+      -d        Decrypts file with key
+    </pre>
+
+    <p>Details:</p>
+
+    <pre>fuyoal -h</pre>
+    <p>displays help message presented above.</p>
+
+    <pre>fuyoal -e file1 key1</pre>
+    <p>encrypts <i>file1</i> with <i>key1</i> and adds random part to make it impossible to discriminate this case from
+      case when two files are encrypted together. The size of the phony part is drawn from truncated normal distribution
+      with mean equal size of <i>file1</i>, standard deviation equal 10% of size of <i>file1</i> and range equal 60% of
+      size of <i>file1</i>. The output is saved to file <i>file1</i>.fya.</p>
+
+    <pre>fuyoal -e file1 key1 -s size</pre>
+    <p>encrypts <i>file1</i> with <i>key1</i> and adds random part to make it impossible to discriminate this case from
+      case when two files are encrypted together. The size of the phony part is specified by <i>size</i> parameter in
+      bytes. The output is saved to file <i>file1</i>.fya.</p>
+    
+    <pre>fuyoal -e file1 key1 file2 key2</pre>
+    <p>encrypts <i>file1</i> with <i>key1</i> and <i>file2</i> with <i>key2</i>. The output is saved to
+      file <i>file1</i>.fya.</p>
+
+    <pre>fuyoal -d file key1</pre>
+    <p>decrypts first (when two files were encrypted together) or only file (when just one file was encrypted).</p>
+
+    <pre>fuyoal -d file key2</pre>
+    <p>decrypts second (hidden) file (when two files were encrypted together).</p>
+    
+    <h2><a name="download">Download</a></h2>
+
+    <table border="1" cellpadding="10" cellspacing="0" style="border-collapse:collapse;">
+      <tr>
+        <th>File</th>
+	<th>Version</th>
+	<th>SHA256</th>
+      </tr>
+      <tr>
+        <td><a href="download/fuyoal.py">Source</a></td>
+	<td>0.1 (alpha)</td>
+	<td>f1da792ab610f12fdf3014e1aefcb27d0b574c59da54db4f59c857d146f53bb5</td>
+      </tr>
+      <tr>
+        <td><a href="download/fuyoal.exe">Windows binaries</a></td>
+	<td>0.1 (alpha)</td>
+	<td>fdb0432b1c99b48ce1b925f940cff45498618fc486527a6fe6888a0d1189b8cd</td>
+      </tr>
+    </table>
+    
+    <h2><a name="contact">Contact</a></h2>
+    ---
     
     
   </body>
