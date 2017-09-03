@@ -13,9 +13,17 @@ def main(argv):
         usage()
     elif(argv[0] == "-e"):
         if(len(argv)==3):
-            encrypt_file1(argv[1],argv[2])
+            encrypt_file1(argv[1],argv[2],False)
         elif(len(argv)==5):
-            encrypt_file2(argv[1],argv[2],argv[3],argv[4])
+            if(argv[3]=="-s"):
+                try:
+                    sizealt = int(argv[4])
+                except:
+                    print("fuyoal: Wrong size (-s) parameter!")
+                    return(-1)
+                encrypt_file1(argv[1],argv[2],sizealt)
+            else:
+                encrypt_file2(argv[1],argv[2],argv[3],argv[4])
         else:
             usage()
     elif(argv[0] == "-d"):
@@ -30,21 +38,25 @@ def main(argv):
 def usage():
     print("Usage:")
     print("  fuyoal -h")
-    print("  fuyoal -e file1 key1 [file2 key2]")
+    print("  fuyoal -e file1 key1 [-s size] | [file2 key2]")
     print("  fuyoal -d file key1 | key2")
     print("")
     print("Options:")
     print("  -h        Shows help message")
     print("  -e        Ensrypts file1 with key1 and possibly file2 with key2")
+    print("  -s        Specify size of phony second file (in bytes)")
     print("  -d        Decrypts file with key")
 
 
-def encrypt_file1(filein,key):
+def encrypt_file1(filein,key,sizealt):
     if(not os.path.isfile(filein)):
         print("fuyoal: File " + filein + " does not exist!")
         return(-1)
-    orginfsize = os.path.getsize(filein)
-    phonyfsize = randomsize(orginfsize, orginfsize*.1, orginfsize*.3)
+    if(sizealt):
+        phonyfsize = sizealt
+    else:
+        orginfsize = os.path.getsize(filein)
+        phonyfsize = randomsize(orginfsize, orginfsize*.1, orginfsize*.3)
     iterator = 0
     while(os.path.isfile("fuyoaltemp"+str(iterator))):
         iterator += 1
