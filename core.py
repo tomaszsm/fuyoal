@@ -22,8 +22,8 @@ def encrypt_file1(filein,key,sizealt):
         iterator += 1
     phonyfile = "fuyoaltemp"+str(iterator)
     with open(phonyfile, 'wb') as outfile:
-        for i in xrange(phonyfsize):
-            outfile.write("0")
+        outfile.seek(phonyfsize-1)
+        outfile.write("\0")
     ret = encrypt_file2(filein,key,phonyfile,binascii.b2a_base64(Random.get_random_bytes(32))[:32])
     os.remove(phonyfile)
     if(os.path.isfile(phonyfile)):
