@@ -48,10 +48,25 @@
     
     <h2><a name="licence">Licence</a></h2>
 
-    <p>The program is available under <a href="https://opensource.org/licenses/GPL-3.0">GNU General Public License version 3</a>.
+    <p>The program is available under <a href="https://opensource.org/licenses/GPL-3.0">GNU General Public License version 3</a>.</p>
         
-    <h2><a name="kl">Known liabilities</a></h2>
-    --- distribution of differences
+    <h2><a name="kl">Known Liabilities</a></h2>
+
+    <p>In case of encryption of one file the size of the second (phony) file is drawn from truncated normal
+      distribution. The mean of the distribution equals the size of the real file, the standard deviation equals 10% of
+      the size of the real file, and boundaries are set 30% of the size of the real file below and above mean. This
+      strategy should work fine when a few files is encrypted and when hidden files have size close to facade
+      files. However when large number of files is encrypted (both single and facade-concealed pairs) the difference
+      between the above said distribution and distribution of sizes of concealed files may became noticeable. This could
+      give adversary (probabilistic) knowledge of which encrypted files contain hidden partition.</p>
+
+    <p>Solution to the problem replacing automatic generation of size of phony files with process that would result in
+      indistinguishable distributions of sizes of second partitions in both groups of files. This would require
+      following steps. First, all (or large representative sample) facade-concealed pairs need to be encrypted. Second,
+      the distribution of size of second partition (in relation to the size of first partition) need to be
+      estimated. Third, the single files need to be encrypted using explicit setup of second partition size (also in
+      relation to the size of first partition). This strategy reduces chance of adversary to distinguish between single
+      and double encrypted files.</p>
     
     <h2><a name="usage">Usage</a></h2>
 
@@ -79,8 +94,7 @@
     <pre>fuyoal -e file1 key1</pre>
     <p>encrypts <i>file1</i> with <i>key1</i> and adds random part to make it impossible to discriminate this case from
       case when two files are encrypted together. The size of the phony part is drawn from truncated normal distribution
-      with mean equal size of <i>file1</i>, standard deviation equal 10% of size of <i>file1</i> and range equal 60% of
-      size of <i>file1</i>. The output is saved to file <i>file1</i>.fya.</p>
+      (see <a href="kl">Known Liabilities</a> for details). The output is saved to file <i>file1</i>.fya.</p>
 
     <pre>fuyoal -e file1 key1 -s size</pre>
     <p>encrypts <i>file1</i> with <i>key1</i> and adds random part to make it impossible to discriminate this case from

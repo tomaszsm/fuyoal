@@ -3,7 +3,7 @@ from core import *
 
 class Frame(wx.Frame):
     def __init__(self):
-        wx.Frame.__init__(self, None, title="Fuyoal", size=wx.Size(550,300))
+        wx.Frame.__init__(self, None, title="Fuyoal", size=wx.Size(650,300))
 
         self.SetSizeHintsSz(wx.DefaultSize, wx.DefaultSize)
 		
@@ -26,6 +26,10 @@ class Frame(wx.Frame):
         self.m_textCtrl2 = wx.TextCtrl(sbSizer1.GetStaticBox(), wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size(150,-1), wx.TE_PASSWORD)
         sbSizer1.Add(self.m_textCtrl2, 0, wx.ALL, 5)
 
+        self.m_staticText1a = wx.StaticText(sbSizer1.GetStaticBox(), wx.ID_ANY, u"", wx.DefaultPosition, wx.DefaultSize, 0)
+        self.m_staticText1a.Wrap(-1)
+        sbSizer1.Add(self.m_staticText1a, 0, wx.ALL, 5)
+
         bSizer1.Add(sbSizer1, 1, wx.ALL | wx.EXPAND, 5)
 
         bSizer6 = wx.BoxSizer(wx.HORIZONTAL)
@@ -37,7 +41,7 @@ class Frame(wx.Frame):
         self.m_textCtrl5 = wx.TextCtrl(self.m_panel2, wx.ID_ANY, u"default", wx.DefaultPosition, wx.DefaultSize, 0)
         bSizer6.Add(self.m_textCtrl5, 0, wx.ALL, 5)
 
-        self.m_staticText4 = wx.StaticText(self.m_panel2, wx.ID_ANY, u"kB", wx.DefaultPosition, wx.DefaultSize, 0)
+        self.m_staticText4 = wx.StaticText(self.m_panel2, wx.ID_ANY, u"KB", wx.DefaultPosition, wx.DefaultSize, 0)
         self.m_staticText4.Wrap(-1)
         bSizer6.Add(self.m_staticText4, 0, wx.ALL, 5)
 
@@ -68,6 +72,10 @@ class Frame(wx.Frame):
         self.m_textCtrl4.Enable(False)
 
         sbSizer3.Add(self.m_textCtrl4, 0, wx.ALL, 5)
+
+        self.m_staticText2a = wx.StaticText(sbSizer3.GetStaticBox(), wx.ID_ANY, u"", wx.DefaultPosition, wx.DefaultSize, 0)
+        self.m_staticText2a.Wrap(-1)
+        sbSizer3.Add(self.m_staticText2a, 0, wx.ALL, 5)
 
         bSizer1.Add(sbSizer3, 1, wx.ALL | wx.EXPAND, 5)
 
@@ -100,6 +108,7 @@ class Frame(wx.Frame):
         if dlg.ShowModal() == wx.ID_OK:
             path = dlg.GetPath()
             self.m_textCtrl1.SetLabel(path)
+            self.m_staticText1a.SetLabel(self.nicesize(os.path.getsize(path)))
         dlg.Destroy()
 
     def onOpenFile2(self, event):
@@ -112,6 +121,7 @@ class Frame(wx.Frame):
         if dlg.ShowModal() == wx.ID_OK:
             path = dlg.GetPath()
             self.m_textCtrl3.SetLabel(path)
+            self.m_staticText2a.SetLabel(self.nicesize(os.path.getsize(path)))
         dlg.Destroy()
 
     def onCheck(self, event):
@@ -166,7 +176,7 @@ class Frame(wx.Frame):
                     self.Warn("Something went wrong!")
             else:
                 try:
-                    sizealt = int(self.m_textCtrl5.GetValue())
+                    sizealt = int(self.m_textCtrl5.GetValue())*1024
                 except:
                     self.Warn("Wrong size parameter!")
                     return(-1)
@@ -203,6 +213,18 @@ class Frame(wx.Frame):
         dlg.ShowModal()
         dlg.Destroy()
 
+
+    def nicesize(self,size):
+        if(size < 1024):
+            ret = str(size)+" B"
+        elif(size < 1048576):
+            ksize = round(size/1024.0,2)
+            ret = str(ksize)+" KB"
+        else:
+            msize = round(size/1048576.0,2)
+            ret = str(msize)+" MB"
+        return(ret)
+            
 
 app = wx.App(redirect=True)
 top = Frame()
