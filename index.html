@@ -37,12 +37,14 @@
       one. Secondly because plain steganography dos not
       fulfill <a href="https://en.wikipedia.org/wiki/Kerckhoffs%27s_principle">Kerckhoffs's principle</a>.</p>
 
-    <p>Alternative approach include hiding secret content in along with evident albeit encrypted content. In ideal
+    <p>Alternative approach include hiding secret content in along with evident albeit encrypted content. In an ideal
       situation the concealed content is hidden perfectly i.e., adversary has no means of finding if the secret part
-      exists. However In general case there is no way of decrypting one ciphertext to two plain contents the key is
-      shorter than the content. Thus the strategy adopted by Fuyoal is a little different. If individual can not make
+      exists. However In general case there is no way of decrypting one ciphertext to two plain contents if the key is
+      shorter than the content. Thus the strategy adopted by Fuyoal is a little different. If an individual can not make
       single file and facade-concealed pair indistinguishable by making them look like single file let us make them
-      indistinguishable by making them all look like facade-concealed pairs.</p>
+      indistinguishable by making them all look like facade-concealed pairs. Thus Fuyoal transform both single file or
+      facade-concealed pair of iles into one encrypted file that reval no information if the second file is real message
+      or random blather.</p>
     
     <p>Most of versatile deniable encryption tools include low level hiding techniques like creating multiple encrypted
       disk volumes within a container volume. These tools are difficult to use in portable form or in general without
@@ -51,8 +53,8 @@
       by ordinary file manipulation.</p>
 
     <h2><a name="working">Working</a></h2>
-    <p>Fuyoal encrypts two volumes of data with two keys and concatenate them together. Encrypted file is contains size
-      of first volume in order make it possible to separate one of the volumes. First volume is always encrypted file,
+    <p>Fuyoal encrypts two volumes of data with two keys and concatenate them together. Encrypted file contains size of
+      first volume in order make it possible to separate one of the volumes. First volume is always encrypted file,
       second one can be either another file or block of "0" characters encrypted with random key. Encrypted file has
       following structure:</p>
 
@@ -82,13 +84,13 @@
       noticeable. This could give adversary (probabilistic) knowledge of which encrypted files contain hidden
       partition.</p>
 
-    <p>Solution to the problem replacing automatic generation of size of phony files with process that would result in
-      indistinguishable distributions of sizes of second partitions in both groups of files. This would require
+    <p>Solution to the problem is replacing automatic generation of size of phony files with process that would result
+      in indistinguishable distributions of sizes of second partitions in both groups of files. This would require
       following steps. First, all (or large representative sample) facade-concealed pairs need to be encrypted. Second,
       the distribution of size of second partition (in relation to the size of first partition) need to be
       estimated. Third, the single files need to be encrypted using explicit setup of second partition size (also in
-      relation to the size of first partition). This strategy reduces chance of adversary to distinguish between single
-      and double encrypted files.</p>
+      relation to the size of first partition) to mimic the previously estimated distribution. This strategy reduces
+      chance of adversary to distinguish between single and double encrypted files.</p>
 
     <p>Also:</p>
     <a href="https://xkcd.com/538/"><img src="https://imgs.xkcd.com/comics/security.png" /></a>
@@ -119,7 +121,7 @@
     <pre>fuyoal -e file1 key1</pre>
     <p>encrypts <i>file1</i> with <i>key1</i> and adds random part to make it impossible to discriminate this case from
       case when two files are encrypted together. The size of the phony part is drawn from truncated normal distribution
-      (see <a href="kl">Known Liabilities</a> for details). The output is saved to file <i>file1</i>.fya.</p>
+      (see <a href="#kl">Known Liabilities</a> for details). The output is saved to file <i>file1</i>.fya.</p>
 
     <pre>fuyoal -e file1 key1 -s size</pre>
     <p>encrypts <i>file1</i> with <i>key1</i> and adds random part to make it impossible to discriminate this case from
@@ -150,18 +152,18 @@
       </tr>
       <tr>
         <td><a href="download/fuyoal_source.tar.gz">Source</a></td>
-	<td>0.2 (alpha)</td>
-	<td>7ceb17ac794b4f6c614ad15ede337ea949b1b9daadad24e614009057acd32393</td>
+	<td>0.2.1 (alpha)</td>
+	<td>67cfc1ed859a8e7525b5348807c26188c110b681c569ee6a881337cb32502b48</td>
       </tr>
       <tr>
         <td><a href="download/fuyoal.exe">Windows binaries (CLI)</a></td>
-	<td>0.2 (alpha)</td>
+	<td>0.2.1 (alpha)</td>
 	<td>c76775f20fecfd40265b83c5a8b5788325fbda82a5073f2bb6ee4cbd6a697b29</td>
       </tr>
       <tr>
-        <td><a href="download/fuyoal.exe">Windows binaries (GUI)</a></td>
-	<td>0.2 (alpha)</td>
-	<td>48f0d79194df84fa6fb8779f3829a5658178d827dcb8ae31dda3dc91f66ea603</td>
+        <td><a href="download/guifuyoal.exe">Windows binaries (GUI)</a></td>
+	<td>0.2.1 (alpha)</td>
+	<td>eb627bb35110b95d9ba8aae5cb6af9c97738bab9a1f943b5f5961d5305bf1444</td>
       </tr>
     </table>
     
