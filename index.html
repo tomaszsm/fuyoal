@@ -37,18 +37,39 @@
       one. Secondly because plain steganography dos not
       fulfill <a href="https://en.wikipedia.org/wiki/Kerckhoffs%27s_principle">Kerckhoffs's principle</a>.</p>
 
-    <p>More versatile deniable encryption tools include low level hiding techniques like creating multiple encrypted
+    <p>Alternative approach include hiding secret content in along with evident albeit encrypted content. In ideal
+      situation the concealed content is hidden perfectly i.e., adversary has no means of finding if the secret part
+      exists. However In general case there is no way of decrypting one ciphertext to two plain contents the key is
+      shorter than the content. Thus the strategy adopted by Fuyoal is a little different. If individual can not make
+      single file and facade-concealed pair indistinguishable by making them look like single file let us make them
+      indistinguishable by making them all look like facade-concealed pairs.</p>
+    
+    <p>Most of versatile deniable encryption tools include low level hiding techniques like creating multiple encrypted
       disk volumes within a container volume. These tools are difficult to use in portable form or in general without
-      deep integration with computer operational system. Fuyoal is software which allows encryption of confidential
-      content jointly with facade content that user is inclined to reveal. As the software can also be used to encrypt
-      single content the adversary is not able to proof existence of concealed subject.</p>
+      deep integration with computer operational system. Fuyoal encrypts and decrypts selected files without any
+      demanding system dependencies. It also does not leave any tracks in operational system other than the ones leaved
+      by ordinary file manipulation.</p>
 
     <h2><a name="working">Working</a></h2>
-    ---
+    <p>Fuyoal encrypts two volumes of data with two keys and concatenate them together. Encrypted file is contains size
+      of first volume in order make it possible to separate one of the volumes. First volume is always encrypted file,
+      second one can be either another file or block of "0" characters encrypted with random key. Encrypted file has
+      following structure:</p>
+
+    <table border="1" cellpadding="5" cellspacing="0" style="border-collapse:collapse;"><tr>
+	<td>Size of first volume (32 B)</td><td>IV 1 (16 B)</td><td>Key verification constant 1 (32 B)</td><td>Encrypted
+	file 1</td><td>Padding 1 (1-32 B)</td><td>IV 2 (16 B)</td><td>Key verification constant 2 (32 B)</td><td>Encrypted
+	file 2</td><td>Padding 2 (1-32 B)</td>
+    </tr></table>
+    
+    <p>When decrypting, provided key is tested on first key verification constant. If its validity is proven the key is
+    used to decrypt first volume. If the key does not fit it is tested on second key verification constant. If it appear
+    to be valid the second volume is decrypted. If it does not the decryption fails.</p>
     
     <h2><a name="licence">Licence</a></h2>
 
-    <p>The program is available under <a href="https://opensource.org/licenses/GPL-3.0">GNU General Public License version 3</a>.</p>
+    <p>The program is available under <a href="https://opensource.org/licenses/GPL-3.0">GNU General Public License
+    version 3</a>.</p>
         
     <h2><a name="kl">Known Liabilities</a></h2>
 
@@ -56,9 +77,10 @@
       distribution. The mean of the distribution equals the size of the real file, the standard deviation equals 10% of
       the size of the real file, and boundaries are set 30% of the size of the real file below and above mean. This
       strategy should work fine when a few files is encrypted and when hidden files have size close to facade
-      files. However when large number of files is encrypted (both single and facade-concealed pairs) the difference
-      between the above said distribution and distribution of sizes of concealed files may became noticeable. This could
-      give adversary (probabilistic) knowledge of which encrypted files contain hidden partition.</p>
+      files. However when large number of files is encrypted (both single files and facade-concealed pairs) the
+      difference between the above said distribution and distribution of sizes of concealed files may became
+      noticeable. This could give adversary (probabilistic) knowledge of which encrypted files contain hidden
+      partition.</p>
 
     <p>Solution to the problem replacing automatic generation of size of phony files with process that would result in
       indistinguishable distributions of sizes of second partitions in both groups of files. This would require
@@ -67,6 +89,9 @@
       estimated. Third, the single files need to be encrypted using explicit setup of second partition size (also in
       relation to the size of first partition). This strategy reduces chance of adversary to distinguish between single
       and double encrypted files.</p>
+
+    <p>Also:</p>
+    <a href="https://xkcd.com/538/"><img src="https://imgs.xkcd.com/comics/security.png" /></a>
     
     <h2><a name="usage">Usage</a></h2>
 
