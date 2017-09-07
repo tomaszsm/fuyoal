@@ -8,7 +8,7 @@ from Crypto.Cipher import AES
 from random import gauss
 
 
-def encrypt_file1(filein,key,sizealt):
+def encrypt_file1(filein,key,sizealt,output):
     if(not os.path.isfile(filein)):
         print("fuyoal: File " + filein + " does not exist!")
         return(-1)
@@ -24,15 +24,15 @@ def encrypt_file1(filein,key,sizealt):
     with open(phonyfile, 'wb') as outfile:
         outfile.seek(phonyfsize-1)
         outfile.write("\0")
-    ret = encrypt_file2(filein,key,phonyfile,binascii.b2a_base64(Random.get_random_bytes(32))[:32])
+    ret = encrypt_file2(filein,key,phonyfile,binascii.b2a_base64(Random.get_random_bytes(32))[:32],output)
     os.remove(phonyfile)
     if(os.path.isfile(phonyfile)):
         return(-1)
     else:
         return(ret)
+
     
-    
-def encrypt_file2(filein1,key1,filein2,key2):
+def encrypt_file2(filein1,key1,filein2,key2,output):
     if(not os.path.isfile(filein1)):
         print("fuyoal: File " + filein1 + " does not exist!")
         return(-1)
@@ -54,21 +54,32 @@ def encrypt_file2(filein1,key1,filein2,key2):
     
     f1size = "0"*(32-len(f1size)) + f1size
 
-    outfile = filein1+".fya"
-    with open(outfile, 'wb') as destination:
-        destination.write(f1size)
-        shutil.copyfileobj(open(fileout1,'rb'), destination)
-        shutil.copyfileobj(open(fileout2,'rb'), destination)
-    os.remove(fileout1)
-    os.remove(fileout2)
-
+    if(output):
+        outfile = output
+    else:
+        outfile = filein1+".fya"
+    try:
+        with open(outfile, 'wb') as destination:
+            destination.write(f1size)
+            shutil.copyfileobj(open(fileout1,'rb'), destination)
+            shutil.copyfileobj(open(fileout2,'rb'), destination)
+        os.remove(fileout1)
+        os.remove(fileout2)
+    except IOError:
+        os.remove(fileout1)
+        os.remove(fileout2)
+        return(-2)
+        
     return(0)
-    
-def decrypt_file(filein,key):
+
+
+def decrypt_file(filein,key,output):
     if(not os.path.isfile(filein)):
         print("fuyoal: File " + filein + " does not exist!")
         return(-1)
-    if(filein[-4:]==".fya"):
+    if(output):
+        fileout = output
+    elif(filein[-4:]==".fya"):
         fileout = filein[:-4]
     else:
         fileout = filein+".dec"
@@ -86,9 +97,11 @@ def randomsize(size,par1,par2):
 def pad(s,bs):
     return(s + (bs - len(s) % bs) * chr(bs - len(s) % bs))
 
+
 def unpad(s):
     return(s[0:-ord(s[-1])])
     
+
 def encrypt(filein, fileout, key, bs):
     key = hashlib.sha256(key.encode()).digest()
     iv = Random.new().read(AES.block_size)

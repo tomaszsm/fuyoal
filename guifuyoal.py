@@ -161,17 +161,21 @@ class Frame(wx.Frame):
             if(self.m_textCtrl2.GetValue()==self.m_textCtrl4.GetValue()):
                 self.Warn("Key 1 is same as key 2 - this is situation which is unfortunate for many reasons!")
                 return(-1)
-            ret = encrypt_file2(self.m_textCtrl1.GetValue(),self.m_textCtrl2.GetValue(),self.m_textCtrl3.GetValue(),self.m_textCtrl4.GetValue())
+            ret = encrypt_file2(self.m_textCtrl1.GetValue(),self.m_textCtrl2.GetValue(),self.m_textCtrl3.GetValue(),self.m_textCtrl4.GetValue(),False)
             if(ret==0):
                 self.Info("Files encrypted.")
+            elif(ret==-2):
+                self.Warn("Could not write to file!")
             else:
                 self.Warn("Something went wrong!")
         # Encrypt 1 file
         else:
             if(self.m_textCtrl5.GetValue()=="default"):
-                ret = encrypt_file1(self.m_textCtrl1.GetValue(),self.m_textCtrl2.GetValue(),False)
+                ret = encrypt_file1(self.m_textCtrl1.GetValue(),self.m_textCtrl2.GetValue(),False,False)
                 if(ret==0):
                     self.Info("File encrypted.")
+                elif(ret==-2):
+                    self.Warn("Could not write to file!")
                 else:
                     self.Warn("Something went wrong!")
             else:
@@ -180,9 +184,11 @@ class Frame(wx.Frame):
                 except:
                     self.Warn("Wrong size parameter!")
                     return(-1)
-                ret = encrypt_file1(self.m_textCtrl1.GetValue(),self.m_textCtrl2.GetValue(),sizealt)
+                ret = encrypt_file1(self.m_textCtrl1.GetValue(),self.m_textCtrl2.GetValue(),sizealt,False)
                 if(ret==0):
                     self.Info("File encrypted.")
+                elif(ret==-2):
+                    self.Warn("Could not write to file!")
                 else:
                     self.Warn("Something went wrong!")
 
@@ -193,7 +199,7 @@ class Frame(wx.Frame):
         if(not os.path.isfile(self.m_textCtrl1.GetValue())):
             self.Warn("File " + self.m_textCtrl1.GetValue() + " does not exist!")
             return(-1)
-        ret = decrypt_file(self.m_textCtrl1.GetValue(),self.m_textCtrl2.GetValue())
+        ret = decrypt_file(self.m_textCtrl1.GetValue(),self.m_textCtrl2.GetValue(),False)
         if(ret==0):
             self.Info("File decrypted.")
         elif(ret==-2):

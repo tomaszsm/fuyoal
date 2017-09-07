@@ -53,10 +53,10 @@
       by ordinary file manipulation.</p>
 
     <h2><a name="working">Working</a></h2>
-    <p>Fuyoal encrypts two volumes of data with two keys and concatenate them together. Encrypted file contains size of
-      first volume in order make it possible to separate one of the volumes. First volume is always encrypted file,
-      second one can be either another file or block of zeros encrypted with random key. Encrypted file has following
-      structure:</p>
+    <p>Fuyoal encrypts two volumes of data (using AES-256) with two keys and concatenate them together. Encrypted file
+      contains size of first volume in order make it possible to separate one of the volumes. First volume is always
+      encrypted file, second one can be either another file or block of zeros encrypted with random key. Encrypted file
+      has following structure:</p>
 
     <table border="1" cellpadding="5" cellspacing="0" style="border-collapse:collapse;"><tr>
 	<td>Size of first volume (32 B)</td><td>IV 1 (16 B)</td><td>Key verification constant 1 (32 B)</td><td>Encrypted
@@ -101,16 +101,24 @@
     
     <p>Fuyoal is to be used as follows:</p>
     <pre>
-    Usage:
-      fuyoal -h
-      fuyoal -e file1 key1 [-s size] | [file2 key2]
-      fuyoal -d file key1 | key2
-    
-    Options:
-      -h        Shows help message
-      -e        Ensrypts file1 with key1 and possibly file2 with key2
-      -s        Specify size of phony second file (in bytes)
-      -d        Decrypts file with key
+  usage: 
+    fuyoal -h
+    fuyoal -e FILE1 KEY1 [-s SIZE | -a FILE2 KEY2] [-o FILE]
+    fuyoal -d FILE1 KEY1 [-o FILE]
+
+  positional arguments:
+    FILE1                 Input file for encryption or decryption
+    KEY1                  Key for encryption or decryption
+
+  optional arguments:
+    -h, --help            show this help message and exit
+    -e, --encrypt         Encrypts FILE1 with KEY1
+    -d, --decrypt         Decrypts FILE1 with KEY1
+    -s SIZE, --size SIZE  Size of phony volume added to ane encrypted file
+    -a FILE2 KEY2, --add FILE2 KEY2
+			  Second file, key pair for encryption
+    -o FILE, --output FILE
+			  Writes output to FILE
     </pre>
 
     <p>Details:</p>
@@ -118,25 +126,26 @@
     <pre>fuyoal -h</pre>
     <p>displays help message presented above.</p>
 
-    <pre>fuyoal -e file1 key1</pre>
-    <p>encrypts <i>file1</i> with <i>key1</i> and adds random part to make it impossible to discriminate this case from
-      case when two files are encrypted together. The size of the phony part is drawn from truncated normal distribution
-      (see <a href="#kl">Known Liabilities</a> for details). The output is saved to file <i>file1</i>.fya.</p>
+    <pre>fuyoal -e FILE1 KEY1</pre>
+    <p>encrypts FILE1 with KEY1 and adds random part to make it impossible to discriminate this case from case when two
+      files are encrypted together. The size of the phony part is drawn from truncated normal distribution
+      (see <a href="#kl">Known Liabilities</a> for details). The output is saved to file FILE1.fya.</p>
 
-    <pre>fuyoal -e file1 key1 -s size</pre>
-    <p>encrypts <i>file1</i> with <i>key1</i> and adds random part to make it impossible to discriminate this case from
-      case when two files are encrypted together. The size of the phony part is specified by <i>size</i> parameter in
-      bytes. The output is saved to file <i>file1</i>.fya.</p>
+    <pre>fuyoal -e FILE1 KEY1 -s SIZE</pre>
+    <p>encrypts FILE1 with KEY1 and adds random part to make it impossible to discriminate this case from case when two
+      files are encrypted together. The size of the phony part is specified by SIZE parameter in bytes. The output is
+      saved to file FILE1.fya.</p>
     
-    <pre>fuyoal -e file1 key1 file2 key2</pre>
-    <p>encrypts <i>file1</i> with <i>key1</i> and <i>file2</i> with <i>key2</i>. The output is saved to
-      file <i>file1</i>.fya.</p>
+    <pre>fuyoal -e FILE1 KEY1 -a FILE2 KEY2</pre>
+    <p>encrypts FILE1 with KEY1 and FILE2 with KEY2 and saves them together to file FILE1.fya.</p>
 
-    <pre>fuyoal -d file key1</pre>
-    <p>decrypts first (when two files were encrypted together) or only file (when just one file was encrypted).</p>
+    <pre>fuyoal -d FILE1 KEY1</pre>
+    <p>depending on KEY1 either decrypts first (when two files were encrypted together), or only file (when just one
+    file was encrypted), or decrypts second (hidden) file (when two files were encrypted together). The input is
+    encrypted FILE1.</p>
 
-    <pre>fuyoal -d file key2</pre>
-    <p>decrypts second (hidden) file (when two files were encrypted together).</p>
+    <pre>fuyoal [-e | -d] FILE1 KEY1 [options] -o FILE</pre>
+    <p>encrypts or decrypts files acording to options and saves output to FILE.</p>
 
     <h3><a name="usagegui">Graphical User Interface</a></h3>
 
@@ -144,26 +153,28 @@
     
     <h2><a name="download">Download</a></h2>
 
+    <p>Current version is 0.3 (beta), released 2017-09-07.</p>
+    
     <table border="1" cellpadding="10" cellspacing="0" style="border-collapse:collapse;">
       <tr>
         <th>File</th>
-	<th>Version</th>
+	<th>Size</th>
 	<th>SHA256</th>
       </tr>
       <tr>
         <td><a href="download/fuyoal_source.tar.gz">Source</a></td>
-	<td>0.2.2 (alpha) 2017-09-04</td>
-	<td>e898861363590d63277b12bf5c7d08713f49dd14cd3e9c9e92daf100310d3fa9</td>
+	<td>3.71 KB</td>
+	<td>3a5dfe9e913a6c060f3a888714fd9f4339111c81182d71e77f491aa8fcb39400</td>
       </tr>
       <tr>
         <td><a href="download/fuyoal.exe">Windows binaries (CLI)</a></td>
-	<td>0.2.2 (alpha) 2017-09-04</td>
-	<td>c6386e9fe3b4cec8179113088120aba7d32307fbcae978bf84813def921bf4cf</td>
+	<td>3.25 MB</td>
+	<td>c46c7ce1bf6e396ec315e9bec25b81a0634849e0881a2b98f1ca7e6a22aae338</td>
       </tr>
       <tr>
         <td><a href="download/guifuyoal.exe">Windows binaries (GUI)</a></td>
-	<td>0.2.2 (alpha) 2017-09-04</td>
-	<td>5dde2c8deb5feb7afa682bdbd7ca5c533ec69676ecd0963e27b56f95e14a47a8</td>
+	<td>8.05 MB</td>
+	<td>fdf4b06de99e2bb1479be29fdb5b2bdc444401497030a148aa624bab91815bc7</td>
       </tr>
     </table>
     
