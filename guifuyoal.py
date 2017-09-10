@@ -131,11 +131,13 @@ class Frame(wx.Frame):
             self.m_textCtrl3.Enable()
             self.m_textCtrl4.Enable()
             self.m_textCtrl5.Enable(False)
+            self.m_button6.Enable(False)
         else:
             self.m_button4.Enable(False)
             self.m_textCtrl3.Enable(False)
             self.m_textCtrl4.Enable(False)
             self.m_textCtrl5.Enable()
+            self.m_button6.Enable()
 
     def onEncrypt(self, event):
         if(self.m_textCtrl1.GetValue()==""):
@@ -180,7 +182,10 @@ class Frame(wx.Frame):
                     self.Warn("Something went wrong!")
             else:
                 try:
-                    sizealt = int(self.m_textCtrl5.GetValue())*1024
+                    ## sizealt = max(round(float(self.m_textCtrl5.GetValue())*1024),1)
+                    sizealt = int(round(float(self.m_textCtrl5.GetValue())*1024))
+                    if(sizealt < 1):
+                        raise
                 except:
                     self.Warn("Wrong size parameter!")
                     return(-1)

@@ -10,7 +10,7 @@ def main(argv):
     parser.add_argument("KEY1",          nargs=1, help="key for encryption or decryption")
     gred.add_argument("-e", "--encrypt", help="encrypt FILE1 with KEY1", action="store_true")
     gred.add_argument("-d", "--decrypt", help="decrypt FILE1 with KEY1", action="store_true")
-    grsa.add_argument("-s", "--size",    nargs=1, help="size of phony volume added to ane encrypted file", type=int, default=[False])
+    grsa.add_argument("-s", "--size",    nargs=1, help="size of phony volume added to ane encrypted file", type=positive_int, default=[False])
     grsa.add_argument("-a", "--add",     nargs=2, metavar=("FILE2","KEY2"), help="second file, key pair for encryption", default=[False])
     parser.add_argument("-o", "--output",nargs=1, metavar=("FILE"), help="write output to FILE", default=[False])
     args = parser.parse_args()
@@ -30,6 +30,12 @@ def main(argv):
         if(ret==-3):
             print("fuyoal: Input error!")
 
+def positive_int(string):
+    value = int(string)
+    if value < 1:
+        msg = "%r is not a positive integer" % string
+        raise argparse.ArgumentTypeError(msg)
+    return value
 
 if __name__ == "__main__":
    main(sys.argv[1:])
