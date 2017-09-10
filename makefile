@@ -10,13 +10,13 @@ clean:
 
 fuyoal.exe: fuyoal.py core.py
 	-rm -r dist
-	pyinstaller --onefile fuyoal.py
+	pyinstaller --onefile --console fuyoal.py
 	mv dist/fuyoal.exe fuyoal.exe
 	-rm -r dist
 
-guifuyoal.exe: guifuyoal.py core.py
+guifuyoal.exe: guifuyoal.py core.py icon.ico
 	-rm -r dist
-	pyinstaller --onefile --windowed --icon=fuyoal.ico guifuyoal.py
+	pyinstaller --onefile --windowed --icon=icon.ico guifuyoal.py
 	mv dist/guifuyoal.exe guifuyoal.exe
 	-rm -r dist
 

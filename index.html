@@ -26,37 +26,37 @@
     <h2><a name="about">About Fuyoal</a></h2>
 
     <p>In many countries <a href="https://en.wikipedia.org/wiki/Key_disclosure_law">key disclosure law</a> requires
-      individuals to reveal their encryption keys to police and other law enforcement agencies. Refusal can lead to
-      serious measures taken against individual. One way to avoid this constraint is to make it impossible to proof that
-      the concealed content exists at all.</p>
+      individuals to reveal their encryption keys to police and other law enforcement agencies. Non-compliance may
+      result in serious repercussions. One way to handle this intrusion is to conceal some content in a way preventing
+      any proof of its existence.</p>
 
-    <p><a href="https://en.wikipedia.org/wiki/Deniable_encryption">Deniable encryption</a> refers to a situation when
-      adversary can not prove that concealed content exists. Most commonly discussed form of deniable encryption
-      is <a href="https://en.wikipedia.org/wiki/Steganography">steganography</a>. This technique fits for some uses but
-      is not adequate for general purposes. Firstly because it usually takes much larger content to hide the target
-      one. Secondly because plain steganography dos not
+    <p><a href="https://en.wikipedia.org/wiki/Deniable_encryption">Deniable encryption</a> refers to a situation when an
+      adversary cannot prove that concealed content exists. The most commonly discussed form of deniable encryption
+      is <a href="https://en.wikipedia.org/wiki/Steganography">steganography</a>. It is a technique fit for some
+      purposes, but inadequate for general use. Firstly, because it usually takes much larger content to hide the target
+      one. Secondly, because pure steganography dos not
       fulfill <a href="https://en.wikipedia.org/wiki/Kerckhoffs%27s_principle">Kerckhoffs's principle</a>.</p>
 
-    <p>Alternative approach include hiding secret content in along with evident albeit encrypted content. In an ideal
-      situation the concealed content is hidden perfectly i.e., adversary has no means of finding if the secret part
-      exists. However In general case there is no way of decrypting one ciphertext to two plain contents if the key is
-      shorter than the content. Thus the strategy adopted by Fuyoal is a little different. If an individual can not make
-      single file and facade-concealed pair indistinguishable by making them look like single file let us make them
-      indistinguishable by making them all look like facade-concealed pairs. Thus Fuyoal transform both single file or
-      facade-concealed pair of iles into one encrypted file that reval no information if the second file is real message
-      or random blather.</p>
+    <p>Alternative approach consist in hiding secret content along with evident albeit encrypted content. In an ideal
+      situation the concealed content is hidden perfectly i.e., an adversary has no means of finding out that the secret
+      part exists. However there is generally no way of decrypting one ciphertext into two sets of plain content if the
+      key is shorter than the content. The strategy adopted by Fuyoal is a little different. If it is impossible to make
+      single file and facade-concealed pair indistinguishable by making them look like single file, let us make them
+      indistinguishable by making everything look like facade-concealed pairs. Thus Fuyoal transforms each single file
+      and each facade-concealed pair of files into one encrypted file that reveals no information whether the second of
+      its two volumes is real message or random blather.</p>
     
     <p>Most of versatile deniable encryption tools include low level hiding techniques like creating multiple encrypted
       disk volumes within a container volume. These tools are difficult to use in portable form or in general without
       deep integration with computer operational system. Fuyoal encrypts and decrypts selected files without any
-      demanding system dependencies. It also does not leave any tracks in operational system other than the ones leaved
-      by ordinary file manipulation.</p>
+      demanding system dependencies. It also does not leave any tracks in operational system other than the ones left by
+      ordinary file manipulation.</p>
 
     <h2><a name="working">Working</a></h2>
-    <p>Fuyoal encrypts two volumes of data (using AES-256) with two keys and concatenate them together. Encrypted file
-      contains size of first volume in order make it possible to separate one of the volumes. First volume is always
-      encrypted file, second one can be either another file or block of zeros encrypted with random key. Encrypted file
-      has following structure:</p>
+    <p>Fuyoal encrypts two volumes of data (using AES-256) with two keys and concatenates them together. The encrypted
+      file contains information about the size of the first volume in order make it possible to separate one of the
+      volumes. The first volume is always the real file to be encrypted, the second one can be either another file or
+      a block of zeros encrypted with a random key. The output file has the following structure:</p>
 
     <table border="1" cellpadding="5" cellspacing="0" style="border-collapse:collapse;"><tr>
 	<td>Size of first volume (32 B)</td><td>IV 1 (16 B)</td><td>Key verification constant 1 (32 B)</td><td>Encrypted
@@ -64,9 +64,9 @@
 	file 2</td><td>Padding 2 (1-32 B)</td>
     </tr></table>
     
-    <p>When decrypting, provided key is tested on first key verification constant. If its validity is proven the key is
-    used to decrypt first volume. If the key does not fit it is tested on second key verification constant. If it appear
-    to be valid the second volume is decrypted. If it does not the decryption fails.</p>
+    <p>When decrypting, provided key is tested on the first key verification constant. If its validity is proven the key
+      is used to decrypt the first volume. If the key does not fit, it is tested on the second key verification
+      constant. If it appears to be valid, the second volume is decrypted. If it does not, the decryption fails.</p>
     
     <h2><a name="licence">Licence</a></h2>
 
@@ -75,22 +75,21 @@
         
     <h2><a name="kl">Known Liabilities</a></h2>
 
-    <p>In case of encryption of one file the size of the second (phony) file is drawn from truncated normal
+    <p>In the case of encryption of one (real) file the size of the second (phony) file is drawn from truncated normal
       distribution. The mean of the distribution equals the size of the real file, the standard deviation equals 10% of
-      the size of the real file, and boundaries are set 30% of the size of the real file below and above mean. This
-      strategy should work fine when a few files is encrypted and when hidden files have size close to facade
-      files. However when large number of files is encrypted (both single files and facade-concealed pairs) the
-      difference between the above said distribution and distribution of sizes of concealed files may became
-      noticeable. This could give adversary (probabilistic) knowledge of which encrypted files contain hidden
-      partition.</p>
+      the size of the real file, and boundaries are set 30% of the size of the real file below and above the mean. This
+      strategy should work fine when encrypting several files and when both the real and the facade files are similarly
+      sized. However with a large number of files (both single ones and facade-concealed pairs), the difference between
+      the distribution mentioned above and that of the sizes of the concealed files may become noticeable. This could
+      give an adversary a (probabilistic) knowledge as to which encrypted files contain a hidden partition.</p>
 
-    <p>Solution to the problem is replacing automatic generation of size of phony files with process that would result
-      in indistinguishable distributions of sizes of second partitions in both groups of files. This would require
-      following steps. First, all (or large representative sample) facade-concealed pairs need to be encrypted. Second,
-      the distribution of size of second partition (in relation to the size of first partition) need to be
-      estimated. Third, the single files need to be encrypted using explicit setup of second partition size (also in
-      relation to the size of first partition) to mimic the previously estimated distribution. This strategy reduces
-      chance of adversary to distinguish between single and double encrypted files.</p>
+    <p>This problem can be solved by replacing the automatic generation of the phony files’ size with a process that
+      would result in indistinguishable distributions of second partitions' sizes in both groups of files. This would
+      require the following steps. First, encryption of all (or a large representative sample of) facade-concealed
+      pairs. Second, estimation of the distribution of the second partition's size (in relation to the size of the first
+      partition). Third, encryption of the single files using explicit setup of the second partition's size (also in
+      relation to the size of the first one) to mimic the previously estimated distribution. This strategy reduces chances
+      of an adversary to distinguish between single and double encrypted files.</p>
 
     <p>Also:</p>
     <a href="https://xkcd.com/538/"><img src="https://imgs.xkcd.com/comics/security.png" /></a>
@@ -107,18 +106,18 @@
     fuyoal -d FILE1 KEY1 [-o FILE]
 
   positional arguments:
-    FILE1                 Input file for encryption or decryption
-    KEY1                  Key for encryption or decryption
+    FILE1                 input file for encryption or decryption
+    KEY1                  key for encryption or decryption
 
   optional arguments:
     -h, --help            show this help message and exit
-    -e, --encrypt         Encrypts FILE1 with KEY1
-    -d, --decrypt         Decrypts FILE1 with KEY1
-    -s SIZE, --size SIZE  Size of phony volume added to ane encrypted file
+    -e, --encrypt         encrypt FILE1 with KEY1
+    -d, --decrypt         decrypt FILE1 with KEY1
+    -s SIZE, --size SIZE  size of phony volume added to ane encrypted file
     -a FILE2 KEY2, --add FILE2 KEY2
-			  Second file, key pair for encryption
+			  second file, key pair for encryption
     -o FILE, --output FILE
-			  Writes output to FILE
+			  write output to FILE
     </pre>
 
     <p>Details:</p>
@@ -127,33 +126,33 @@
     <p>displays help message presented above.</p>
 
     <pre>fuyoal -e FILE1 KEY1</pre>
-    <p>encrypts FILE1 with KEY1 and adds random part to make it impossible to discriminate this case from case when two
-      files are encrypted together. The size of the phony part is drawn from truncated normal distribution
-      (see <a href="#kl">Known Liabilities</a> for details). The output is saved to file FILE1.fya.</p>
+    <p>encrypts FILE1 with KEY1 and adds random part to make it impossible to discriminate this case from the case when
+      two files are encrypted together. The size of the phony part is drawn from truncated normal distribution (see <a
+      href="#kl">Known Liabilities</a> for details). The output is saved to file FILE1.fya.</p>
 
     <pre>fuyoal -e FILE1 KEY1 -s SIZE</pre>
-    <p>encrypts FILE1 with KEY1 and adds random part to make it impossible to discriminate this case from case when two
-      files are encrypted together. The size of the phony part is specified by SIZE parameter in bytes. The output is
+    <p>encrypts FILE1 with KEY1 and adds random part to make it impossible to discriminate this case from the case when
+      two files are encrypted together. The size of the phony part is specified by SIZE parameter in bytes. The output is
       saved to file FILE1.fya.</p>
     
     <pre>fuyoal -e FILE1 KEY1 -a FILE2 KEY2</pre>
     <p>encrypts FILE1 with KEY1 and FILE2 with KEY2 and saves them together to file FILE1.fya.</p>
 
     <pre>fuyoal -d FILE1 KEY1</pre>
-    <p>depending on KEY1 either decrypts first (when two files were encrypted together), or only file (when just one
-    file was encrypted), or decrypts second (hidden) file (when two files were encrypted together). The input is
-    encrypted FILE1.</p>
+    <p>depending on KEY1 either decrypts the first (when two files were encrypted together), or the only file (when just
+      one file was encrypted), or decrypts the second (hidden) file (when two files were encrypted together). The input is
+      encrypted FILE1.</p>
 
     <pre>fuyoal [-e | -d] FILE1 KEY1 [options] -o FILE</pre>
-    <p>encrypts or decrypts files acording to options and saves output to FILE.</p>
+    <p>encrypts or decrypts files according to options and saves output to FILE.</p>
 
     <h3><a name="usagegui">Graphical User Interface</a></h3>
 
-    <p>Using GUI version of the program is pretty self explanatory.</p>
+    <p>Using GUI version of the program is pretty self-explanatory.</p>
     
     <h2><a name="download">Download</a></h2>
 
-    <p>Current version is 0.3 (beta), released 2017-09-07.</p>
+    <p>Current version is 0.3.1 (beta), released 2017-09-07.</p>
     
     <table border="1" cellpadding="10" cellspacing="0" style="border-collapse:collapse;">
       <tr>
@@ -164,17 +163,17 @@
       <tr>
         <td><a href="download/fuyoal_source.tar.gz">Source</a></td>
 	<td>3.71 KB</td>
-	<td>3a5dfe9e913a6c060f3a888714fd9f4339111c81182d71e77f491aa8fcb39400</td>
+	<td>25f280bb9f01a13516a8c316ddbfcdd68d5c0be5653984f7f6fc88b9a40c4354</td>
       </tr>
       <tr>
         <td><a href="download/fuyoal.exe">Windows binaries (CLI)</a></td>
 	<td>3.25 MB</td>
-	<td>c46c7ce1bf6e396ec315e9bec25b81a0634849e0881a2b98f1ca7e6a22aae338</td>
+	<td>6651b4aa1cad7e5aa64ebec10c3d15af9d8e15b1d69709f1fd6fa8cdd8d12ed0</td>
       </tr>
       <tr>
         <td><a href="download/guifuyoal.exe">Windows binaries (GUI)</a></td>
-	<td>8.05 MB</td>
-	<td>fdf4b06de99e2bb1479be29fdb5b2bdc444401497030a148aa624bab91815bc7</td>
+	<td>8 MB</td>
+	<td>95f8e697eace63d385d3bd4eea83c161ddcee7725fb8ace8afde3535befabf27</td>
       </tr>
     </table>
     
