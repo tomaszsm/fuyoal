@@ -17,17 +17,18 @@ class program():
         self.args = self.parser.parse_args()
         
     def main(self,argv):
+        edc = edcr()
         if(self.args.encrypt):
             if(self.args.add[0]):
-                self.ret = encrypt_file2(self.args.FILE1[0],self.args.KEY1[0],self.args.add[0],self.args.add[1],self.args.output[0])
+                self.ret = edc.encrypt_file2(self.args.FILE1[0],self.args.KEY1[0],self.args.add[0],self.args.add[1],self.args.output[0])
                 if(self.ret==-2):
                     print("fuyoal: Could not write to file!")
             else:
-                self.ret = encrypt_file1(self.args.FILE1[0],self.args.KEY1[0],self.args.size[0],self.args.output[0])
+                self.ret = edc.encrypt_file1(self.args.FILE1[0],self.args.KEY1[0],self.args.size[0],self.args.output[0])
                 if(self.ret==-2):
                     print("fuyoal: Could not write to file!")
         else:
-            self.ret = decrypt_file(self.args.FILE1[0],self.args.KEY1[0],self.args.output[0])
+            self.ret = edc.decrypt_file(self.args.FILE1[0],self.args.KEY1[0],self.args.output[0])
             if(self.ret==-2):
                 print("fuyoal: Wrong key!")
             if(self.ret==-3):
