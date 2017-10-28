@@ -2,6 +2,7 @@ import binascii
 import hashlib
 import os
 import shutil
+import struct
 import sys
 from Crypto import Random
 from Crypto.Cipher import AES
@@ -53,10 +54,10 @@ class edcr():
             iterator2 += 1
         fileout2 = filein2+str(iterator2)
 
-        f1size = str(self.encrypt(filein1, fileout1, key1, 32))
+        f1size = self.encrypt(filein1, fileout1, key1, 32)
         self.encrypt(filein2, fileout2, key2, 32)
 
-        f1size = "0"*(32-len(f1size)) + f1size
+        f1size_s = struct.pack("Q",f1size)
 
         if(output):
             outfile = output
@@ -64,7 +65,7 @@ class edcr():
             outfile = filein1+".fya"
         try:
             with open(outfile, 'wb') as destination:
-                destination.write(f1size)
+                destination.write(f1size_s)
                 shutil.copyfileobj(open(fileout1,'rb'), destination)
                 shutil.copyfileobj(open(fileout2,'rb'), destination)
             os.remove(fileout1)
@@ -136,7 +137,8 @@ class edcr():
         key = hashlib.sha256(keya.encode()).digest()
         with open(filein, 'rb') as infile:
             try:
-                f1size = int(infile.read(32))
+                f1size_s = infile.read(8)
+                f1size = struct.unpack("Q",f1size_s)[0]
             except:
                 return(-3)
 
@@ -145,7 +147,7 @@ class edcr():
             if(cipher.decrypt(infile.read(32))=="Arguing that you don't care abou"):
                 decryptfile = 0
             else:
-                infile.seek(32 + AES.block_size + (f1size+1)*bs, 0)
+                infile.seek(8 + AES.block_size + (f1size+1)*bs, 0)
                 iv = infile.read(AES.block_size)
                 cipher = AES.new(key, AES.MODE_CBC, iv)
                 if(cipher.decrypt(infile.read(32))=="Arguing that you don't care abou"):

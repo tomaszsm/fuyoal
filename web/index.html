@@ -62,7 +62,7 @@
       a block of zeros encrypted with a random key. The output file has the following structure:</p>
 
     <table border="1" cellpadding="5" cellspacing="0" style="border-collapse:collapse;"><tr>
-	<td>Size of first volume (32 B)</td><td>IV 1 (16 B)</td><td>Key verification constant 1 (32 B)</td><td>Encrypted
+	<td>Size of first volume (8 B)</td><td>IV 1 (16 B)</td><td>Key verification constant 1 (32 B)</td><td>Encrypted
 	file 1</td><td>Padding 1 (1-32 B)</td><td>IV 2 (16 B)</td><td>Key verification constant 2 (32 B)</td><td>Encrypted
 	file 2</td><td>Padding 2 (1-32 B)</td>
     </tr></table>
@@ -158,7 +158,9 @@
     
     <h2><a name="download">Download</a></h2>
 
-    <p>Current version is 0.3.3 (beta), released 2017-10-27.</p>
+    <p>Current version is 0.4.0 (beta), released 2017-10-28.</p>
+    
+    <p><strong>Note:</strong> Current version is not compatible with version 0.3.3 and older. Please find source code of version 0.3.3 below for transition purposes.</p>
     
     <table border="1" cellpadding="10" cellspacing="0" style="border-collapse:collapse;">
       <tr>
@@ -167,19 +169,30 @@
 	<th>SHA256</th>
       </tr>
       <tr>
+	<th colspan="3">Version 0.4.0</th>
+      </tr>
+      <tr>
         <td><a href="download/fuyoal_source.tar.gz">Source</a></td>
-	<td>3.95 KB</td>
-	<td>df95b29ba1c9ded8e526c47c0b29633dcb6578b20ce16007af3600a6</td>
+	<td>4 KB</td>
+	<td>aa5e86c4584dfead1574a85abe008752ffe586fb7db91d10eec5d39a56810793</td>
       </tr>
       <tr>
         <td><a href="download/fuyoal.exe">Windows binaries (CLI)</a></td>
 	<td>3.25 MB</td>
-	<td>6efe4a99ad7eab5384a62d75de9075f791b541a73698520daa9d0f50</td>
+	<td>3bb389fe2842e27f2df50933dd046df7adb67a72fd90510dc2ed2a763c43c07d</td>
       </tr>
       <tr>
         <td><a href="download/guifuyoal.exe">Windows binaries (GUI)</a></td>
 	<td>8 MB</td>
-	<td>f6127d454ec8b217e9b7e1373f38f9052ceb114f5ffa33bc88986c78</td>
+	<td>ea21367bfd2a1202437889f947cea22eb75dfaf7be93593f3b04a127f79d54b2</td>
+      </tr>
+      <tr>
+	<th colspan="3">Version 0.3.3</th>
+      </tr>
+      <tr>
+        <td><a href="download/fuyoal_source3.tar.gz">Source</a></td>
+	<td>3.95 KB</td>
+	<td>df95b29ba1c9ded8e526c47c0b29633dcb6578b20ce16007af3600a6</td>
       </tr>
     </table>
     
