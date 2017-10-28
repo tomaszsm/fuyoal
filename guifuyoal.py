@@ -103,13 +103,16 @@ class Frame(wx.Frame):
         dlg = wx.FileDialog(
             self, message="Choose a file",
             defaultFile="",
-            wildcard="All files (*.*)|*.*",
+            wildcard="All files (*.*)|*.*|Encrypted files (*.fya)|*.fya",
             style=wx.FD_OPEN | wx.FD_CHANGE_DIR
         )
         if dlg.ShowModal() == wx.ID_OK:
             path = dlg.GetPath()
             self.m_textCtrl1.SetLabel(path)
-            self.m_staticText1a.SetLabel(self.nicesize(os.path.getsize(path)))
+            try:
+                self.m_staticText1a.SetLabel(self.nicesize(os.path.getsize(path)))
+            except WindowsError:
+                self.Warn("File " + self.m_textCtrl1.GetValue() + " does not exist!")
         dlg.Destroy()
 
     def onOpenFile2(self, event):
@@ -122,7 +125,10 @@ class Frame(wx.Frame):
         if dlg.ShowModal() == wx.ID_OK:
             path = dlg.GetPath()
             self.m_textCtrl3.SetLabel(path)
-            self.m_staticText2a.SetLabel(self.nicesize(os.path.getsize(path)))
+            try:
+                self.m_staticText2a.SetLabel(self.nicesize(os.path.getsize(path)))
+            except WindowsError:
+                self.Warn("File " + self.m_textCtrl3.GetValue() + " does not exist!")
         dlg.Destroy()
 
     def onCheck(self, event):
