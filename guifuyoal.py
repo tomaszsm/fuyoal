@@ -3,7 +3,7 @@ from core import *
 
 class Frame(wx.Frame):
     def __init__(self):
-        wx.Frame.__init__(self, None, title="Fuyoal 0.4.2", size=wx.Size(650,300))
+        wx.Frame.__init__(self, None, title="Fuyoal 0.5", size=wx.Size(650,300))
         self.edc = edcr()
 
         self.SetSizeHintsSz(wx.DefaultSize, wx.DefaultSize)

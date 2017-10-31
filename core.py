@@ -1,17 +1,17 @@
-import binascii
-import hashlib
 import os
+import random as regran
 import shutil
 import struct
 import sys
 from Crypto import Random
 from Crypto.Cipher import AES
-from random import gauss
+from Crypto.Hash import SHA256
 
 
 class edcr():
     def __init__(self):
         pass
+
 
     def encrypt_file1(self,filein,key,sizealt,output):
         if(not os.path.isfile(filein)):
@@ -29,7 +29,7 @@ class edcr():
         with open(phonyfile, 'wb') as outfile:
             outfile.seek(phonyfsize-1)
             outfile.write("\0")
-        ret = self.encrypt_file2(filein,key,phonyfile,binascii.b2a_base64(Random.get_random_bytes(32))[:32],output)
+        ret = self.encrypt_file2(filein,key,phonyfile,Random.get_random_bytes(32),output)
         os.remove(phonyfile)
         if(os.path.isfile(phonyfile)):
             return(-1)
@@ -93,9 +93,10 @@ class edcr():
 
 
     def randomsize(self,size,par1,par2):
-        ret = gauss(size,par1)
+        regran.seed(os.urandom(64))
+        ret = regran.gauss(size,par1)
         while(abs(ret-size) > par2):
-            ret = gauss(size,par1)
+            ret = regran.gauss(size,par1)
         return(int(round(ret)))
 
 
@@ -107,8 +108,8 @@ class edcr():
         return(s[0:-ord(s[-1])])
 
 
-    def encrypt(self,filein, fileout, key, bs):
-        key = hashlib.sha256(key.encode()).digest()
+    def encrypt(self,filein, fileout, keya, bs):
+        key = self.hash_key(keya,1000000)
         iv = Random.new().read(AES.block_size)
         cipher = AES.new(key, AES.MODE_CBC, iv)
         filesize = os.path.getsize(filein)
@@ -134,7 +135,7 @@ class edcr():
 
 
     def decrypt(self,filein, fileout, keya, bs):
-        key = hashlib.sha256(keya.encode()).digest()
+        key = self.hash_key(keya,1000000)
         with open(filein, 'rb') as infile:
             try:
                 f1size_s = infile.read(8)
@@ -167,3 +168,10 @@ class edcr():
                     else:
                         outfile.write(cipher.decrypt(chunk))
                         chunk = nextchunk
+
+
+    def hash_key(self,key,rep):
+        h = SHA256.new()
+        for i in xrange(rep):
+            h.update(key)
+        return(h.digest())
