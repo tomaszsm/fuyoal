@@ -5,6 +5,7 @@
     <meta name="description" content="Fuyoal is a program that transforms single file as well as
 				      facade-concealed pair of files into one encrypted file that reveals no information
 				      whether the second of its two volumes is real message or random blather.">
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
 
@@ -61,7 +62,7 @@
       volumes. The first volume is always the real file to be encrypted, the second one can be either another file or
       a block of zeros encrypted with a random key. The output file has the following structure:</p>
 
-    <table border="1" cellpadding="5" cellspacing="0" style="border-collapse:collapse;"><tr>
+    <table border="1" cellpadding="5" cellspacing="0" style="border-collapse:collapse;"><tr class="alt">
 	<td>Size of first volume (8 B)</td><td>IV 1 (16 B)</td><td>Key verification constant 1 (32 B)</td><td>Encrypted
 	file 1</td><td>Padding 1 (1-32 B)</td><td>IV 2 (16 B)</td><td>Key verification constant 2 (32 B)</td><td>Encrypted
 	file 2</td><td>Padding 2 (1-32 B)</td>
@@ -70,11 +71,13 @@
     <p>When decrypting, provided key is tested on the first key verification constant. If its validity is proven the key
       is used to decrypt the first volume. If the key does not fit, it is tested on the second key verification
       constant. If it appears to be valid, the second volume is decrypted. If it does not, the decryption fails.</p>
+
+    <p>Each key is hashed (using SHA-256) one milion times before aplying to hinder possible bruteforce attack on key.</p>
     
     <h2><a name="license">License</a></h2>
 
-    <p>The program is available under <a href="https://opensource.org/licenses/GPL-3.0">GNU General Public License
-    version 3</a>.</p>
+    <p>The program and this documentation is available under <a href="https://opensource.org/licenses/GPL-3.0">GNU
+    General Public License version 3</a>.</p>
         
     <h2><a name="kl">Known Liabilities</a></h2>
 
@@ -123,10 +126,10 @@
 			  write output to FILE
     </pre>
 
-    <p>Details:</p>
+    <h4>Details:</h4>
 
     <pre>fuyoal -h</pre>
-    <p>displays help message presented above.</p>
+    <p>displays information about program and help message presented above.</p>
 
     <pre>fuyoal -e FILE1 KEY1</pre>
     <p>encrypts FILE1 with KEY1 and adds random part to make it impossible to discriminate this case from the case when
