@@ -9,6 +9,7 @@
   </head>
   <body>
 
+    <div class="container">
     <h1>Fuyoal - deniable encryption software</h1>
     
     <ul>
@@ -145,9 +146,9 @@
     <p>encrypts FILE1 with KEY1 and FILE2 with KEY2 and saves them together to file FILE1.fya.</p>
 
     <pre>fuyoal -d FILE1 KEY1</pre>
-    <p>depending on KEY1 either decrypts the first (when two files were encrypted together), or the only file (when just
-      one file was encrypted), or decrypts the second (hidden) file (when two files were encrypted together). The input is
-      encrypted FILE1.</p>
+    <p>depending on KEY1 either decrypts the first (when two files were encrypted together) or the only file (when just
+      one file was encrypted), or decrypts the second (hidden) file (when two files were encrypted together). The input
+      is encrypted FILE1.</p>
 
     <pre>fuyoal [-e | -d] FILE1 KEY1 [options] -o FILE</pre>
     <p>encrypts or decrypts files according to options and saves output to FILE.</p>
@@ -165,25 +166,29 @@
     
     <table border="1" cellpadding="10" cellspacing="0" style="border-collapse:collapse;">
       <tr>
+	<th>Resource</th>
         <th>File</th>
 	<th>Size</th>
 	<th>SHA256</th>
       </tr>
       <!-- <tr> -->
-      <!-- 	<th colspan="3">Version 0.5</th> -->
+      <!-- 	<th colspan="4">Version 0.5</th> -->
       <!-- </tr> -->
       <tr>
-        <td><a href="download/fuyoal_source.tar.gz">Source</a></td>
+        <td>Source code</td>
+        <td><a href="download/fuyoal_source.tar.gz">fuyoal_source.tar.gz</a></td>
 	<td>4.19 KB</td>
 	<td>a30073f4afffce47314d9f97bdd184fc72ebf073172f77fd26e15f143dee4759</td>
       </tr>
       <tr>
-        <td><a href="download/fuyoal.exe">Windows binaries (CLI)</a></td>
+	<td>Windows binaries (CLI)</td>
+        <td><a href="download/fuyoal.exe">fuyoal.exe</a></td>
 	<td>3.25 MB</td>
 	<td>952ba5353690d89d03ee2a5c655a38ad94d05ee71fec3750a42b428111b6942c</td>
       </tr>
       <tr>
-        <td><a href="download/guifuyoal.exe">Windows binaries (GUI)</a></td>
+	<td>Windows binaries (GUI)</td>
+        <td><a href="download/guifuyoal.exe">guifuyoal.exe</a></td>
 	<td>7.99 MB</td>
 	<td>d6ad7fec67cfce46777217daa5f9d0c835576698970b52a667d3dfb2819c8dc9</td>
       </tr>
@@ -193,5 +198,6 @@
 
     <p>Contact the author via his <a href="http://tsmolen.eu/">web page</a>.</p>
 
+    </div>
   </body>
 </html>
