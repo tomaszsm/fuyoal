@@ -63,7 +63,7 @@
       volumes. The first volume is always the real file to be encrypted, the second one can be either another file or
       a block of zeros encrypted with a random key. The output file has the following structure:</p>
 
-    <table border="1" cellpadding="5" cellspacing="0" style="border-collapse:collapse;"><tr class="alt">
+    <table><tr class="alt">
 	<td>Size of first volume (8 B)</td><td>IV 1 (16 B)</td><td>Key verification constant 1 (32 B)</td><td>Encrypted
 	file 1</td><td>Padding 1 (1-32 B)</td><td>IV 2 (16 B)</td><td>Key verification constant 2 (32 B)</td><td>Encrypted
 	file 2</td><td>Padding 2 (1-32 B)</td>
@@ -150,7 +150,7 @@
       one file was encrypted), or decrypts the second (hidden) file (when two files were encrypted together). The input
       is encrypted FILE1.</p>
 
-    <pre>fuyoal [-e | -d] FILE1 KEY1 [options] -o FILE</pre>
+    <pre>fuyoal (-e | -d) FILE1 KEY1 [options] -o FILE</pre>
     <p>encrypts or decrypts files according to options and saves output to FILE.</p>
 
     <h3><a name="usagegui">Graphical User Interface</a></h3>
@@ -164,7 +164,7 @@
 
     <p>Current version is 0.5 (beta), released 2017-10-31.</p>
     
-    <table border="1" cellpadding="10" cellspacing="0" style="border-collapse:collapse;">
+    <table>
       <tr>
 	<th>Resource</th>
         <th>File</th>

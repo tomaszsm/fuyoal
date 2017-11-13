@@ -44,6 +44,10 @@ img {
     background-color:#ffffff;
 }
 
+table {
+    border-collapse:collapse;
+}
+
 table tr th {
     background:#204C78;
     padding:.4em .8em;
