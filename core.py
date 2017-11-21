@@ -3,9 +3,9 @@ import random as regran
 import shutil
 import struct
 import sys
-from Crypto import Random
-from Crypto.Cipher import AES
-from Crypto.Hash import SHA256
+from Cryptodome import Random
+from Cryptodome.Cipher import AES
+from Cryptodome.Hash import SHA256
 
 
 class edcr():
@@ -28,7 +28,7 @@ class edcr():
         phonyfile = "fuyoaltemp"+str(iterator)
         with open(phonyfile, 'wb') as outfile:
             outfile.seek(phonyfsize-1)
-            outfile.write("\0")
+            outfile.write(b"\0")
         ret = self.encrypt_file2(filein,key,phonyfile,Random.get_random_bytes(32),output)
         os.remove(phonyfile)
         if(os.path.isfile(phonyfile)):
@@ -172,6 +172,6 @@ class edcr():
 
     def hash_key(self,key,rep):
         h = SHA256.new()
-        for i in xrange(rep):
+        for i in range(rep):
             h.update(key)
         return(h.digest())

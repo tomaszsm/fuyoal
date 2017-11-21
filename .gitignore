@@ -1,3 +1,5 @@
 fuyoal.exe
 fuyoal_source.tar.gz
 guifuyoal.exe
+__pycache__/*
+core.pyc

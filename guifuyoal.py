@@ -244,7 +244,7 @@ class Frame(wx.Frame):
         return(ret)
             
 
-app = wx.App(redirect=True)
+app = wx.App()
 top = Frame()
 top.Show()
 app.MainLoop()
