@@ -3,98 +3,100 @@ from core import *
 
 class Frame(wx.Frame):
     def __init__(self):
-        wx.Frame.__init__(self, None, title="Fuyoal 0.5", size=wx.Size(650,300))
+        wx.Frame.__init__(self, None, title="Fuyoal 0.6", size=wx.Size(650,300))
         self.edc = edcr()
 
-        self.SetSizeHintsSz(wx.DefaultSize, wx.DefaultSize)
-		
+        self.SetSizeHints(wx.DefaultSize, wx.DefaultSize)
+        self.WaitCursor= wx.Cursor(wx.CURSOR_WAIT)
+        self.RegCursor= wx.Cursor(wx.CURSOR_ARROW)
+
         self.m_panel2 = wx.Panel(self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL)
-        bSizer1 = wx.BoxSizer(wx.VERTICAL)
+        self.bSizer1 = wx.BoxSizer(wx.VERTICAL)
 
-        sbSizer1 = wx.StaticBoxSizer(wx.StaticBox(self.m_panel2, wx.ID_ANY, u"First input file (for encryption or decrypion)"), wx.HORIZONTAL)
+        self.sbSizer1 = wx.StaticBoxSizer(wx.StaticBox(self.m_panel2, wx.ID_ANY, u"First input file (for encryption or decrypion)"), wx.HORIZONTAL)
 
-        self.m_button3 = wx.Button(sbSizer1.GetStaticBox(), wx.ID_ANY, u"Find file", wx.DefaultPosition, wx.DefaultSize, 0)
+        self.m_button3 = wx.Button(self.sbSizer1.GetStaticBox(), wx.ID_ANY, u"Find file", wx.DefaultPosition, wx.DefaultSize, 0)
         self.m_button3.Bind(wx.EVT_BUTTON, self.onOpenFile1)
-        sbSizer1.Add(self.m_button3, 0, wx.ALL, 5)
+        self.sbSizer1.Add(self.m_button3, 0, wx.ALL, 5)
 
-        self.m_textCtrl1 = wx.TextCtrl(sbSizer1.GetStaticBox(), wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size(200,-1), 0)
-        sbSizer1.Add(self.m_textCtrl1, 0, wx.ALL, 5)
+        self.m_textCtrl1 = wx.TextCtrl(self.sbSizer1.GetStaticBox(), wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size(200,-1), 0)
+        self.sbSizer1.Add(self.m_textCtrl1, 0, wx.ALL, 5)
 
-        self.m_staticText1 = wx.StaticText(sbSizer1.GetStaticBox(), wx.ID_ANY, u"Key 1:", wx.DefaultPosition, wx.DefaultSize, 0)
+        self.m_staticText1 = wx.StaticText(self.sbSizer1.GetStaticBox(), wx.ID_ANY, u"Key 1:", wx.DefaultPosition, wx.DefaultSize, 0)
         self.m_staticText1.Wrap(-1)
-        sbSizer1.Add(self.m_staticText1, 0, wx.ALL, 5)
+        self.sbSizer1.Add(self.m_staticText1, 0, wx.ALL, 5)
 
-        self.m_textCtrl2 = wx.TextCtrl(sbSizer1.GetStaticBox(), wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size(150,-1), wx.TE_PASSWORD)
-        sbSizer1.Add(self.m_textCtrl2, 0, wx.ALL, 5)
+        self.m_textCtrl2 = wx.TextCtrl(self.sbSizer1.GetStaticBox(), wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size(150,-1), wx.TE_PASSWORD)
+        self.sbSizer1.Add(self.m_textCtrl2, 0, wx.ALL, 5)
 
-        self.m_staticText1a = wx.StaticText(sbSizer1.GetStaticBox(), wx.ID_ANY, u"", wx.DefaultPosition, wx.DefaultSize, 0)
+        self.m_staticText1a = wx.StaticText(self.sbSizer1.GetStaticBox(), wx.ID_ANY, u"", wx.DefaultPosition, wx.DefaultSize, 0)
         self.m_staticText1a.Wrap(-1)
-        sbSizer1.Add(self.m_staticText1a, 0, wx.ALL, 5)
+        self.sbSizer1.Add(self.m_staticText1a, 0, wx.ALL, 5)
 
-        bSizer1.Add(sbSizer1, 1, wx.ALL | wx.EXPAND, 5)
+        self.bSizer1.Add(self.sbSizer1, 1, wx.ALL | wx.EXPAND, 5)
 
-        bSizer6 = wx.BoxSizer(wx.HORIZONTAL)
+        self.bSizer6 = wx.BoxSizer(wx.HORIZONTAL)
 
         self.m_staticText3 = wx.StaticText(self.m_panel2, wx.ID_ANY, u"Size of phony ciphertext:", wx.DefaultPosition, wx.DefaultSize, 0)
         self.m_staticText3.Wrap(-1)
-        bSizer6.Add(self.m_staticText3, 0, wx.ALL, 5)
+        self.bSizer6.Add(self.m_staticText3, 0, wx.ALL, 5)
 
         self.m_textCtrl5 = wx.TextCtrl(self.m_panel2, wx.ID_ANY, u"default", wx.DefaultPosition, wx.DefaultSize, 0)
-        bSizer6.Add(self.m_textCtrl5, 0, wx.ALL, 5)
+        self.bSizer6.Add(self.m_textCtrl5, 0, wx.ALL, 5)
 
         self.m_staticText4 = wx.StaticText(self.m_panel2, wx.ID_ANY, u"KB", wx.DefaultPosition, wx.DefaultSize, 0)
         self.m_staticText4.Wrap(-1)
-        bSizer6.Add(self.m_staticText4, 0, wx.ALL, 5)
+        self.bSizer6.Add(self.m_staticText4, 0, wx.ALL, 5)
 
-        bSizer1.Add(bSizer6, 1, wx.EXPAND, 5)
+        self.bSizer1.Add(self.bSizer6, 1, wx.EXPAND, 5)
 
         self.m_checkBox2 = wx.CheckBox(self.m_panel2, wx.ID_ANY, u"Include second file", wx.DefaultPosition, wx.DefaultSize, 0)
         self.Bind(wx.EVT_CHECKBOX, self.onCheck) 
-        bSizer1.Add(self.m_checkBox2, 0, wx.ALL, 5)
+        self.bSizer1.Add(self.m_checkBox2, 0, wx.ALL, 5)
 
-        sbSizer3 = wx.StaticBoxSizer(wx.StaticBox(self.m_panel2, wx.ID_ANY, u"Second input file (for encryption)"), wx.HORIZONTAL)
+        self.sbSizer3 = wx.StaticBoxSizer(wx.StaticBox(self.m_panel2, wx.ID_ANY, u"Second input file (for encryption)"), wx.HORIZONTAL)
 
-        self.m_button4 = wx.Button(sbSizer3.GetStaticBox(), wx.ID_ANY, u"Find file", wx.DefaultPosition, wx.DefaultSize, 0)
+        self.m_button4 = wx.Button(self.sbSizer3.GetStaticBox(), wx.ID_ANY, u"Find file", wx.DefaultPosition, wx.DefaultSize, 0)
         self.m_button4.Bind(wx.EVT_BUTTON, self.onOpenFile2)
         self.m_button4.Enable(False)
 
-        sbSizer3.Add(self.m_button4, 0, wx.ALL, 5)
+        self.sbSizer3.Add(self.m_button4, 0, wx.ALL, 5)
 
-        self.m_textCtrl3 = wx.TextCtrl(sbSizer3.GetStaticBox(), wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size(200,-1), 0)
+        self.m_textCtrl3 = wx.TextCtrl(self.sbSizer3.GetStaticBox(), wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size(200,-1), 0)
         self.m_textCtrl3.Enable(False)
 
-        sbSizer3.Add(self.m_textCtrl3, 0, wx.ALL, 5)
+        self.sbSizer3.Add(self.m_textCtrl3, 0, wx.ALL, 5)
 
-        self.m_staticText2 = wx.StaticText(sbSizer3.GetStaticBox(), wx.ID_ANY, u"Key 2:", wx.DefaultPosition, wx.DefaultSize, 0)
+        self.m_staticText2 = wx.StaticText(self.sbSizer3.GetStaticBox(), wx.ID_ANY, u"Key 2:", wx.DefaultPosition, wx.DefaultSize, 0)
         self.m_staticText2.Wrap(-1)
-        sbSizer3.Add(self.m_staticText2, 0, wx.ALL, 5)
+        self.sbSizer3.Add(self.m_staticText2, 0, wx.ALL, 5)
 
-        self.m_textCtrl4 = wx.TextCtrl(sbSizer3.GetStaticBox(), wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size(150,-1), wx.TE_PASSWORD)
+        self.m_textCtrl4 = wx.TextCtrl(self.sbSizer3.GetStaticBox(), wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size(150,-1), wx.TE_PASSWORD)
         self.m_textCtrl4.Enable(False)
 
-        sbSizer3.Add(self.m_textCtrl4, 0, wx.ALL, 5)
+        self.sbSizer3.Add(self.m_textCtrl4, 0, wx.ALL, 5)
 
-        self.m_staticText2a = wx.StaticText(sbSizer3.GetStaticBox(), wx.ID_ANY, u"", wx.DefaultPosition, wx.DefaultSize, 0)
+        self.m_staticText2a = wx.StaticText(self.sbSizer3.GetStaticBox(), wx.ID_ANY, u"", wx.DefaultPosition, wx.DefaultSize, 0)
         self.m_staticText2a.Wrap(-1)
-        sbSizer3.Add(self.m_staticText2a, 0, wx.ALL, 5)
+        self.sbSizer3.Add(self.m_staticText2a, 0, wx.ALL, 5)
 
-        bSizer1.Add(sbSizer3, 1, wx.ALL | wx.EXPAND, 5)
+        self.bSizer1.Add(self.sbSizer3, 1, wx.ALL | wx.EXPAND, 5)
 
-        bSizer14 = wx.BoxSizer(wx.HORIZONTAL)
-	
-	self.m_button5 = wx.Button(self.m_panel2, wx.ID_ANY, u"Encrypt", wx.DefaultPosition, wx.DefaultSize, 0)
+        self.bSizer14 = wx.BoxSizer(wx.HORIZONTAL)
+
+        self.m_button5 = wx.Button(self.m_panel2, wx.ID_ANY, u"Encrypt", wx.DefaultPosition, wx.DefaultSize, 0)
         self.m_button5.Bind(wx.EVT_BUTTON, self.onEncrypt)
-	bSizer14.Add( self.m_button5, 0, wx.ALL, 5 )
-	
-	self.m_button6 = wx.Button(self.m_panel2, wx.ID_ANY, u"Decrypt", wx.DefaultPosition, wx.DefaultSize, 0)
-        self.m_button6.Bind(wx.EVT_BUTTON, self.onDecrypt)
-	bSizer14.Add(self.m_button6, 0, wx.ALL, 5)
-				
-	bSizer1.Add( bSizer14, 1, wx.EXPAND, 5 )
+        self.bSizer14.Add( self.m_button5, 0, wx.ALL, 5 )
 
-        self.m_panel2.SetSizer(bSizer1)
+        self.m_button6 = wx.Button(self.m_panel2, wx.ID_ANY, u"Decrypt", wx.DefaultPosition, wx.DefaultSize, 0)
+        self.m_button6.Bind(wx.EVT_BUTTON, self.onDecrypt)
+        self.bSizer14.Add(self.m_button6, 0, wx.ALL, 5)
+
+        self.bSizer1.Add( self.bSizer14, 1, wx.EXPAND, 5 )
+
+        self.m_panel2.SetSizer(self.bSizer1)
         self.m_panel2.Layout()
-        bSizer1.Fit(self.m_panel2)
+        self.bSizer1.Fit(self.m_panel2)
 
         self.Layout()
         self.Centre(wx.BOTH)
@@ -170,7 +172,9 @@ class Frame(wx.Frame):
             if(self.m_textCtrl2.GetValue()==self.m_textCtrl4.GetValue()):
                 self.Warn("Key 1 is same as key 2 - this is situation which is unfortunate for many reasons!")
                 return(-1)
-            ret = self.edc.encrypt_file2(self.m_textCtrl1.GetValue(),self.m_textCtrl2.GetValue(),self.m_textCtrl3.GetValue(),self.m_textCtrl4.GetValue(),False)
+            self.m_panel2.SetCursor(self.WaitCursor)
+            ret = self.edc.encrypt_file2(self.m_textCtrl1.GetValue(),bytes(self.m_textCtrl2.GetValue(),"utf8"),self.m_textCtrl3.GetValue(),bytes(self.m_textCtrl4.GetValue(),"utf8"),False)
+            self.m_panel2.SetCursor(self.RegCursor)
             if(ret==0):
                 self.Info("Files encrypted.")
             elif(ret==-2):
@@ -180,7 +184,7 @@ class Frame(wx.Frame):
         # Encrypt 1 file
         else:
             if(self.m_textCtrl5.GetValue()=="default"):
-                ret = self.edc.encrypt_file1(self.m_textCtrl1.GetValue(),self.m_textCtrl2.GetValue(),False,False)
+                ret = self.edc.encrypt_file1(self.m_textCtrl1.GetValue(),bytes(self.m_textCtrl2.GetValue(),"utf8"),False,False)
                 if(ret==0):
                     self.Info("File encrypted.")
                 elif(ret==-2):
@@ -196,7 +200,9 @@ class Frame(wx.Frame):
                 except:
                     self.Warn("Wrong size parameter!")
                     return(-1)
-                ret = self.edc.encrypt_file1(self.m_textCtrl1.GetValue(),self.m_textCtrl2.GetValue(),sizealt,False)
+                self.m_panel2.SetCursor(self.WaitCursor)
+                ret = self.edc.encrypt_file1(self.m_textCtrl1.GetValue(),bytes(self.m_textCtrl2.GetValue(),"utf8"),sizealt,False)
+                self.m_panel2.SetCursor(self.RegCursor)
                 if(ret==0):
                     self.Info("File encrypted.")
                 elif(ret==-2):
@@ -211,7 +217,9 @@ class Frame(wx.Frame):
         if(not os.path.isfile(self.m_textCtrl1.GetValue())):
             self.Warn("File " + self.m_textCtrl1.GetValue() + " does not exist!")
             return(-1)
-        ret = self.edc.decrypt_file(self.m_textCtrl1.GetValue(),self.m_textCtrl2.GetValue(),False)
+        self.m_panel2.SetCursor(self.WaitCursor)
+        ret = self.edc.decrypt_file(self.m_textCtrl1.GetValue(),bytes(self.m_textCtrl2.GetValue(),"utf8"),False)
+        self.m_panel2.SetCursor(self.RegCursor)
         if(ret==0):
             self.Info("File decrypted.")
         elif(ret==-2):
@@ -220,12 +228,12 @@ class Frame(wx.Frame):
             self.Warn("Wrong input file!")
         else:
             self.Warn("Something went wrong!")
-                    
+
     def Info(parent, message, caption = 'Fuyoal'):
         dlg = wx.MessageDialog(parent, message, caption, wx.OK | wx.ICON_INFORMATION)
         dlg.ShowModal()
         dlg.Destroy()
-        
+
     def Warn(parent, message, caption = 'Error'):
         dlg = wx.MessageDialog(parent, message, caption, wx.OK | wx.ICON_WARNING)
         dlg.ShowModal()
@@ -242,7 +250,7 @@ class Frame(wx.Frame):
             msize = round(size/1048576.0,2)
             ret = str(msize)+" MB"
         return(ret)
-            
+
 
 app = wx.App()
 top = Frame()

@@ -101,11 +101,11 @@ class edcr():
 
 
     def pad(self,s,bs):
-        return(s + (bs - len(s) % bs) * chr(bs - len(s) % bs))
+        return(s + bytes((bs - len(s) % bs) * chr(bs - len(s) % bs),"ascii"))
 
 
     def unpad(self,s):
-        return(s[0:-ord(s[-1])])
+        return(s[0:-s[-1]])
 
 
     def encrypt(self,filein, fileout, keya, bs):
@@ -117,7 +117,7 @@ class edcr():
         with open(filein, 'rb') as infile:
             with open(fileout, 'wb') as outfile:
                 outfile.write(iv)
-                outfile.write(cipher.encrypt("Arguing that you don't care abou"))
+                outfile.write(cipher.encrypt(bytes("Arguing that you don't care abou","ascii")))
                 blockcounter = 0
                 while True:
                     chunk = infile.read(bs)
@@ -145,13 +145,13 @@ class edcr():
 
             iv = infile.read(AES.block_size)
             cipher = AES.new(key, AES.MODE_CBC, iv)
-            if(cipher.decrypt(infile.read(32))=="Arguing that you don't care abou"):
+            if(cipher.decrypt(infile.read(32))==bytes("Arguing that you don't care abou","ascii")):
                 decryptfile = 0
             else:
                 infile.seek(8 + AES.block_size + (f1size+1)*bs, 0)
                 iv = infile.read(AES.block_size)
                 cipher = AES.new(key, AES.MODE_CBC, iv)
-                if(cipher.decrypt(infile.read(32))=="Arguing that you don't care abou"):
+                if(cipher.decrypt(infile.read(32))==bytes("Arguing that you don't care abou","ascii")):
                     decryptfile = 1
                 else:
                     return(-2)

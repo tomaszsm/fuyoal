@@ -15,7 +15,7 @@
     <ul>
       <li><a href="#about">About Fuyoal</a></li>
       <li><a href="#working">Working</a></li>
-      <li><a href="#license">License</a></li>
+      <li><a href="#license">License and Warranty</a></li>
       <li><a href="#kl">Known liabilities</a></li>
       <li><a href="#usage">Usage</a>
 	<ul>
@@ -24,6 +24,7 @@
 	</ul>
       </li>
       <li><a href="#scrn">Screenshots</a></li>
+      <li><a href="#dpnd">Dependencies</a></li>
       <li><a href="#download">Download</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
@@ -73,12 +74,15 @@
       is used to decrypt the first volume. If the key does not fit, it is tested on the second key verification
       constant. If it appears to be valid, the second volume is decrypted. If it does not, the decryption fails.</p>
 
-    <p>Each key is hashed (using SHA-256) one milion times before aplying to hinder possible bruteforce attack on key.</p>
+    <p>Each key is hashed (using SHA-256) one milion times before aplying to hinder possible bruteforce attack on
+    a key.</p>
     
-    <h2><a name="license">License</a></h2>
+    <h2><a name="license">License and Warranty</a></h2>
 
     <p>The program and this documentation is available under <a href="https://opensource.org/licenses/GPL-3.0">GNU
-    General Public License version 3</a>.</p>
+	General Public License version 3</a>.</p>
+
+    <p>Fuyoal comes with absolutely no warranty.</p>
         
     <h2><a name="kl">Known Liabilities</a></h2>
 
@@ -159,10 +163,17 @@
 
     <h2><a name="scrn">Screenshots</a></h2>
     <img src="screen.png" />
+
+    <h2><a name="dpnd">Dependencies</a></h2>
+    <p>Running the program from source requires Python 3.x with
+      <a href="https://pycryptodome.readthedocs.io/en/latest/">Cryptodome</a> package. Besides GUI version
+      requires <a href="https://www.wxpython.org/">wxPython</a> package.</p>
+
+    <p>Windows binaries require Microsoft Windows operating system or emulator of it.</p>
     
     <h2><a name="download">Download</a></h2>
 
-    <p>Current version is 0.5 (beta), released 2017-10-31.</p>
+    <p>Current version is 0.6 (beta), released 2017-11-21.</p>
     
     <table>
       <tr>
@@ -177,20 +188,20 @@
       <tr>
         <td>Source code</td>
         <td><a href="download/fuyoal_source.tar.gz">fuyoal_source.tar.gz</a></td>
-	<td>4.19 KB</td>
-	<td>a30073f4afffce47314d9f97bdd184fc72ebf073172f77fd26e15f143dee4759</td>
+	<td>4.25 KB</td>
+	<td>2d6936c24c889e9285fcb425d621e581de4bd01b80a803d353170fd0e4821f77</td>
       </tr>
       <tr>
 	<td>Windows binaries (CLI)</td>
         <td><a href="download/fuyoal.exe">fuyoal.exe</a></td>
-	<td>3.25 MB</td>
-	<td>952ba5353690d89d03ee2a5c655a38ad94d05ee71fec3750a42b428111b6942c</td>
+	<td>3.54 MB</td>
+	<td>dd0f2d4b5d665251a7848262dca8d61597a8b883d194da4f2b66c691d9343dec</td>
       </tr>
       <tr>
 	<td>Windows binaries (GUI)</td>
         <td><a href="download/guifuyoal.exe">guifuyoal.exe</a></td>
-	<td>7.99 MB</td>
-	<td>d6ad7fec67cfce46777217daa5f9d0c835576698970b52a667d3dfb2819c8dc9</td>
+	<td>9.81 MB</td>
+	<td>5d6fdad65af9de1388da59c94ecfbf309f2d9771096990dfaa9fae8a6b4bcc5f</td>
       </tr>
     </table>
     

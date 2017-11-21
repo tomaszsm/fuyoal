@@ -6,7 +6,7 @@ import gettext
 class VersionedHelp(argparse.HelpFormatter):
     def _format_usage(self, usage, actions, groups, prefix=None):
         if prefix is None:
-            prefix = gettext.gettext("fuyoal 0.5. Deniale encryption software. http://tsmolen.eu/fuyoal\n\nusage:")
+            prefix = gettext.gettext("fuyoal 0.6. Deniale encryption software. http://tsmolen.eu/fuyoal\n\nusage:")
         return argparse.HelpFormatter._format_usage(self, usage, actions, groups, prefix)
 
 class program():
@@ -27,15 +27,15 @@ class program():
         edc = edcr()
         if(self.args.encrypt):
             if(self.args.add[0]):
-                self.ret = edc.encrypt_file2(self.args.FILE1[0],self.args.KEY1[0],self.args.add[0],self.args.add[1],self.args.output[0])
+                self.ret = edc.encrypt_file2(self.args.FILE1[0],bytes(self.args.KEY1[0],"utf8"),self.args.add[0],bytes(self.args.add[1],"utf8"),self.args.output[0])
                 if(self.ret==-2):
                     print("fuyoal: Could not write to file!")
             else:
-                self.ret = edc.encrypt_file1(self.args.FILE1[0],self.args.KEY1[0],self.args.size[0],self.args.output[0])
+                self.ret = edc.encrypt_file1(self.args.FILE1[0],bytes(self.args.KEY1[0],"utf8"),self.args.size[0],self.args.output[0])
                 if(self.ret==-2):
                     print("fuyoal: Could not write to file!")
         else:
-            self.ret = edc.decrypt_file(self.args.FILE1[0],self.args.KEY1[0],self.args.output[0])
+            self.ret = edc.decrypt_file(self.args.FILE1[0],bytes(self.args.KEY1[0],"utf8"),self.args.output[0])
             if(self.ret==-2):
                 print("fuyoal: Wrong key!")
             if(self.ret==-3):
