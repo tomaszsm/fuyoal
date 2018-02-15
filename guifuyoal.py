@@ -3,7 +3,7 @@ from core import *
 
 class Frame(wx.Frame):
     def __init__(self):
-        wx.Frame.__init__(self, None, title="Fuyoal 0.6", size=wx.Size(650,300))
+        wx.Frame.__init__(self, None, title="Fuyoal 0.7", size=wx.Size(650,370))
         self.edc = edcr()
 
         self.SetSizeHints(wx.DefaultSize, wx.DefaultSize)
@@ -20,6 +20,7 @@ class Frame(wx.Frame):
         self.sbSizer1.Add(self.m_button3, 0, wx.ALL, 5)
 
         self.m_textCtrl1 = wx.TextCtrl(self.sbSizer1.GetStaticBox(), wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size(200,-1), 0)
+        self.m_textCtrl1.Bind(wx.EVT_KILL_FOCUS, self.update_output_file)
         self.sbSizer1.Add(self.m_textCtrl1, 0, wx.ALL, 5)
 
         self.m_staticText1 = wx.StaticText(self.sbSizer1.GetStaticBox(), wx.ID_ANY, u"Key 1:", wx.DefaultPosition, wx.DefaultSize, 0)
@@ -82,6 +83,19 @@ class Frame(wx.Frame):
 
         self.bSizer1.Add(self.sbSizer3, 1, wx.ALL | wx.EXPAND, 5)
 
+        self.sbSizer4 = wx.StaticBoxSizer(wx.StaticBox(self.m_panel2, wx.ID_ANY, u"Output file"), wx.HORIZONTAL)
+
+        self.m_button7 = wx.Button(self.sbSizer4.GetStaticBox(), wx.ID_ANY, u"Find file", wx.DefaultPosition, wx.DefaultSize, 0)
+        self.m_button7.Bind(wx.EVT_BUTTON, self.onOpenFile3)
+
+        self.sbSizer4.Add(self.m_button7, 0, wx.ALL, 5)
+
+        self.m_textCtrl6 = wx.TextCtrl(self.sbSizer4.GetStaticBox(), wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size(400,-1), 0)
+
+        self.sbSizer4.Add(self.m_textCtrl6, 0, wx.ALL, 5)
+
+        self.bSizer1.Add(self.sbSizer4, 1, wx.ALL | wx.EXPAND, 5)
+        
         self.bSizer14 = wx.BoxSizer(wx.HORIZONTAL)
 
         self.m_button5 = wx.Button(self.m_panel2, wx.ID_ANY, u"Encrypt", wx.DefaultPosition, wx.DefaultSize, 0)
@@ -106,15 +120,16 @@ class Frame(wx.Frame):
             self, message="Choose a file",
             defaultFile="",
             wildcard="All files (*.*)|*.*|Encrypted files (*.fya)|*.fya",
-            style=wx.FD_OPEN | wx.FD_CHANGE_DIR
+            style=wx.FD_OPEN | wx.FD_CHANGE_DIR | wx.FD_FILE_MUST_EXIST
         )
         if dlg.ShowModal() == wx.ID_OK:
             path = dlg.GetPath()
-            self.m_textCtrl1.SetLabel(path)
+            self.m_textCtrl1.SetValue(path)
             try:
                 self.m_staticText1a.SetLabel(self.nicesize(os.path.getsize(path)))
             except WindowsError:
                 self.Warn("File " + self.m_textCtrl1.GetValue() + " does not exist!")
+            self.update_output_file(None)
         dlg.Destroy()
 
     def onOpenFile2(self, event):
@@ -122,17 +137,38 @@ class Frame(wx.Frame):
             self, message="Choose a file",
             defaultFile="",
             wildcard="All files (*.*)|*.*",
-            style=wx.FD_OPEN | wx.FD_CHANGE_DIR
+            style=wx.FD_OPEN | wx.FD_CHANGE_DIR | wx.FD_FILE_MUST_EXIST
         )
         if dlg.ShowModal() == wx.ID_OK:
             path = dlg.GetPath()
-            self.m_textCtrl3.SetLabel(path)
+            self.m_textCtrl3.SetValue(path)
             try:
                 self.m_staticText2a.SetLabel(self.nicesize(os.path.getsize(path)))
             except WindowsError:
                 self.Warn("File " + self.m_textCtrl3.GetValue() + " does not exist!")
         dlg.Destroy()
 
+    def onOpenFile3(self, event):
+        dlg = wx.FileDialog(
+            self, message="Choose a file",
+            defaultFile="",
+            wildcard="All files (*.*)|*.*|Encrypted files (*.fya)|*.fya",
+            style=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT
+        )
+        if dlg.ShowModal() == wx.ID_OK:
+            path = dlg.GetPath()
+            self.m_textCtrl6.SetValue(path)
+        dlg.Destroy()
+
+    def update_output_file(self, evt):
+        if(self.m_textCtrl1.GetValue()[-4:]==".fya"):
+            fileout = self.m_textCtrl1.GetValue()[:-4]
+        else:
+            fileout = self.m_textCtrl1.GetValue() + ".fya"
+        self.m_textCtrl6.SetValue(fileout)
+        if(evt):
+            evt.Skip()
+        
     def onCheck(self, event):
         checked = event.GetEventObject().Get3StateValue()
         if(checked):
@@ -158,6 +194,13 @@ class Frame(wx.Frame):
         if(self.m_textCtrl2.GetValue()==""):
             self.Warn("Key 1 is empty - it is extremmely insecure!")
             return(-1)
+        outfile = self.m_textCtrl6.GetValue()
+        try:
+            f = open(outfile,"w")
+            f.close()
+        except:
+            self.Warn("Cannot write to file!")
+            return(-1)
         # Encrypt 2 files
         if(self.m_checkBox2.GetValue()):
             if(self.m_textCtrl3.GetValue()==""):
@@ -173,7 +216,9 @@ class Frame(wx.Frame):
                 self.Warn("Key 1 is same as key 2 - this is situation which is unfortunate for many reasons!")
                 return(-1)
             self.m_panel2.SetCursor(self.WaitCursor)
-            ret = self.edc.encrypt_file2(self.m_textCtrl1.GetValue(),bytes(self.m_textCtrl2.GetValue(),"utf8"),self.m_textCtrl3.GetValue(),bytes(self.m_textCtrl4.GetValue(),"utf8"),False)
+            ret = self.edc.encrypt_file2(self.m_textCtrl1.GetValue(),bytes(self.m_textCtrl2.GetValue(),"utf8"), \
+                                         self.m_textCtrl3.GetValue(),bytes(self.m_textCtrl4.GetValue(),"utf8"), \
+                                         outfile)
             self.m_panel2.SetCursor(self.RegCursor)
             if(ret==0):
                 self.Info("Files encrypted.")
@@ -184,7 +229,7 @@ class Frame(wx.Frame):
         # Encrypt 1 file
         else:
             if(self.m_textCtrl5.GetValue()=="default"):
-                ret = self.edc.encrypt_file1(self.m_textCtrl1.GetValue(),bytes(self.m_textCtrl2.GetValue(),"utf8"),False,False)
+                ret = self.edc.encrypt_file1(self.m_textCtrl1.GetValue(),bytes(self.m_textCtrl2.GetValue(),"utf8"),False,outfile)
                 if(ret==0):
                     self.Info("File encrypted.")
                 elif(ret==-2):
@@ -217,8 +262,15 @@ class Frame(wx.Frame):
         if(not os.path.isfile(self.m_textCtrl1.GetValue())):
             self.Warn("File " + self.m_textCtrl1.GetValue() + " does not exist!")
             return(-1)
+        outfile = self.m_textCtrl6.GetValue()
+        try:
+            f = open(outfile,"w")
+            f.close()
+        except:
+            self.Warn("Cannot write to file!")
+            return(-1)
         self.m_panel2.SetCursor(self.WaitCursor)
-        ret = self.edc.decrypt_file(self.m_textCtrl1.GetValue(),bytes(self.m_textCtrl2.GetValue(),"utf8"),False)
+        ret = self.edc.decrypt_file(self.m_textCtrl1.GetValue(),bytes(self.m_textCtrl2.GetValue(),"utf8"),outfile)
         self.m_panel2.SetCursor(self.RegCursor)
         if(ret==0):
             self.Info("File decrypted.")
