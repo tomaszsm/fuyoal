@@ -6,7 +6,7 @@ import gettext
 class VersionedHelp(argparse.HelpFormatter):
     def _format_usage(self, usage, actions, groups, prefix=None):
         if prefix is None:
-            prefix = gettext.gettext("fuyoal 0.7. Deniale encryption software. http://tsmolen.eu/fuyoal\n\nusage:")
+            prefix = gettext.gettext("fuyoal 0.7.1 Deniale encryption software. http://tsmolen.eu/fuyoal\n\nusage:")
         return argparse.HelpFormatter._format_usage(self, usage, actions, groups, prefix)
 
 class program():

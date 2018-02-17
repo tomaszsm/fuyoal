@@ -3,7 +3,7 @@ from core import *
 
 class Frame(wx.Frame):
     def __init__(self):
-        wx.Frame.__init__(self, None, title="Fuyoal 0.7", size=wx.Size(650,370))
+        wx.Frame.__init__(self, None, title="Fuyoal 0.7.1", size=wx.Size(650,370))
         self.edc = edcr()
 
         self.SetSizeHints(wx.DefaultSize, wx.DefaultSize)
@@ -153,7 +153,7 @@ class Frame(wx.Frame):
             self, message="Choose a file",
             defaultFile="",
             wildcard="All files (*.*)|*.*|Encrypted files (*.fya)|*.fya",
-            style=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT
+            style=wx.FD_SAVE
         )
         if dlg.ShowModal() == wx.ID_OK:
             path = dlg.GetPath()
@@ -195,6 +195,9 @@ class Frame(wx.Frame):
             self.Warn("Key 1 is empty - it is extremmely insecure!")
             return(-1)
         outfile = self.m_textCtrl6.GetValue()
+        if(os.path.isfile(outfile)):
+            if(not self.Ask("File already exists. Overwrite?")):
+                return(-1)
         try:
             f = open(outfile,"w")
             f.close()
@@ -229,7 +232,9 @@ class Frame(wx.Frame):
         # Encrypt 1 file
         else:
             if(self.m_textCtrl5.GetValue()=="default"):
+                self.m_panel2.SetCursor(self.WaitCursor)
                 ret = self.edc.encrypt_file1(self.m_textCtrl1.GetValue(),bytes(self.m_textCtrl2.GetValue(),"utf8"),False,outfile)
+                self.m_panel2.SetCursor(self.RegCursor)
                 if(ret==0):
                     self.Info("File encrypted.")
                 elif(ret==-2):
@@ -290,6 +295,12 @@ class Frame(wx.Frame):
         dlg = wx.MessageDialog(parent, message, caption, wx.OK | wx.ICON_WARNING)
         dlg.ShowModal()
         dlg.Destroy()
+
+    def Ask(parent, message, caption = 'Warning'):
+        dlg = wx.MessageDialog(parent, message, caption, wx.YES_NO | wx.ICON_WARNING)
+        result = dlg.ShowModal() == wx.ID_YES
+        dlg.Destroy()
+        return(result)
 
 
     def nicesize(self,size):
