@@ -1,9 +1,11 @@
+#!/usr/bin/python3
+
 import wx
 from core import *
 
 class Frame(wx.Frame):
     def __init__(self):
-        wx.Frame.__init__(self, None, title="Fuyoal 0.7.1", size=wx.Size(650,370))
+        wx.Frame.__init__(self, None, title="Fuyoal 0.7.2", size=wx.Size(650,370))
         self.edc = edcr()
 
         self.SetSizeHints(wx.DefaultSize, wx.DefaultSize)

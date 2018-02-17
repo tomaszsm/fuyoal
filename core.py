@@ -10,7 +10,8 @@ from Cryptodome.Hash import SHA256
 
 class edcr():
     def __init__(self):
-        pass
+        self.testconstant = bytes("Arguing that you don't care abou","ascii")
+        self.hashfactor = 1000000
 
 
     def encrypt_file1(self,filein,key,sizealt,output):
@@ -23,13 +24,14 @@ class edcr():
             orginfsize = os.path.getsize(filein)
             phonyfsize = self.randomsize(orginfsize, orginfsize*.1, orginfsize*.3)
         iterator = 0
-        while(os.path.isfile("fuyoaltemp"+str(iterator))):
+        while(os.path.isfile("fuyoaltemp" + str(iterator))):
             iterator += 1
-        phonyfile = "fuyoaltemp"+str(iterator)
+        phonyfile = "fuyoaltemp" + str(iterator)
         with open(phonyfile, 'wb') as outfile:
             outfile.seek(phonyfsize-1)
             outfile.write(b"\0")
-        ret = self.encrypt_file2(filein,key,phonyfile,Random.get_random_bytes(32),output)
+        randomkey = Random.get_random_bytes(32)
+        ret = self.encrypt_file2(filein,key,phonyfile,randomkey,output)
         os.remove(phonyfile)
         if(os.path.isfile(phonyfile)):
             return(-1)
@@ -46,13 +48,13 @@ class edcr():
             return(-1)
 
         iterator1 = 0
-        while(os.path.isfile(filein1+str(iterator1))):
+        while(os.path.isfile(filein1 + str(iterator1))):
             iterator1 += 1
-        fileout1 = filein1+str(iterator1)
+        fileout1 = filein1 + str(iterator1)
         iterator2 = 0
-        while(os.path.isfile(filein2+str(iterator2))):
+        while(os.path.isfile(filein2 + str(iterator2))):
             iterator2 += 1
-        fileout2 = filein2+str(iterator2)
+        fileout2 = filein2  +str(iterator2)
 
         f1size = self.encrypt(filein1, fileout1, key1, 32)
         self.encrypt(filein2, fileout2, key2, 32)
@@ -109,7 +111,7 @@ class edcr():
 
 
     def encrypt(self,filein, fileout, keya, bs):
-        key = self.hash_key(keya,1000000)
+        key = self.hash_key(keya,self.hashfactor)
         iv = Random.new().read(AES.block_size)
         cipher = AES.new(key, AES.MODE_CBC, iv)
         filesize = os.path.getsize(filein)
@@ -117,7 +119,7 @@ class edcr():
         with open(filein, 'rb') as infile:
             with open(fileout, 'wb') as outfile:
                 outfile.write(iv)
-                outfile.write(cipher.encrypt(bytes("Arguing that you don't care abou","ascii")))
+                outfile.write(cipher.encrypt(self.testconstant))
                 blockcounter = 0
                 while True:
                     chunk = infile.read(bs)
@@ -135,7 +137,7 @@ class edcr():
 
 
     def decrypt(self,filein, fileout, keya, bs):
-        key = self.hash_key(keya,1000000)
+        key = self.hash_key(keya,self.hashfactor)
         with open(filein, 'rb') as infile:
             try:
                 f1size_s = infile.read(8)
@@ -145,13 +147,13 @@ class edcr():
 
             iv = infile.read(AES.block_size)
             cipher = AES.new(key, AES.MODE_CBC, iv)
-            if(cipher.decrypt(infile.read(32))==bytes("Arguing that you don't care abou","ascii")):
+            if(cipher.decrypt(infile.read(32)) == self.testconstant):
                 decryptfile = 0
             else:
                 infile.seek(8 + AES.block_size + (f1size+1)*bs, 0)
                 iv = infile.read(AES.block_size)
                 cipher = AES.new(key, AES.MODE_CBC, iv)
-                if(cipher.decrypt(infile.read(32))==bytes("Arguing that you don't care abou","ascii")):
+                if(cipher.decrypt(infile.read(32)) == self.testconstant):
                     decryptfile = 1
                 else:
                     return(-2)

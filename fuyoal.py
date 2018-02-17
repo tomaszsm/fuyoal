@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 from core import *
 
 import argparse
@@ -6,12 +8,13 @@ import gettext
 class VersionedHelp(argparse.HelpFormatter):
     def _format_usage(self, usage, actions, groups, prefix=None):
         if prefix is None:
-            prefix = gettext.gettext("fuyoal 0.7.1 Deniale encryption software. http://tsmolen.eu/fuyoal\n\nusage:")
+            prefix = gettext.gettext("fuyoal 0.7.2 Deniale encryption software. http://tsmolen.eu/fuyoal\n\nusage:")
         return argparse.HelpFormatter._format_usage(self, usage, actions, groups, prefix)
 
 class program():
     def __init__(self):
-        self.parser = argparse.ArgumentParser(formatter_class=VersionedHelp,usage="\n  fuyoal -h\n  fuyoal -e FILE1 KEY1 [-s SIZE | -a FILE2 KEY2] [-o FILE]\n  fuyoal -d FILE1 KEY1 [-o FILE]")
+        self.parser = argparse.ArgumentParser(
+            formatter_class=VersionedHelp,usage="\n  fuyoal -h\n  fuyoal -e FILE1 KEY1 [-s SIZE | -a FILE2 KEY2] [-o FILE]\n  fuyoal -d FILE1 KEY1 [-o FILE]")
         self.grsa = self.parser.add_mutually_exclusive_group()
         self.gred = self.parser.add_mutually_exclusive_group(required=True)
         self.parser.add_argument("FILE1",         nargs=1, help="input file for encryption or decryption")
@@ -27,7 +30,8 @@ class program():
         edc = edcr()
         if(self.args.encrypt):
             if(self.args.add[0]):
-                self.ret = edc.encrypt_file2(self.args.FILE1[0],bytes(self.args.KEY1[0],"utf8"),self.args.add[0],bytes(self.args.add[1],"utf8"),self.args.output[0])
+                self.ret = edc.encrypt_file2(self.args.FILE1[0],bytes(self.args.KEY1[0],"utf8"),
+                                             self.args.add[0],bytes(self.args.add[1],"utf8"),self.args.output[0])
                 if(self.ret==-2):
                     print("fuyoal: Could not write to file!")
             else:
