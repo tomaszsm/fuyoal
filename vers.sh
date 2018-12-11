@@ -16,4 +16,4 @@ fsize=$(stat -c%s "guifuyoal.exe")
 echo "scale=2; $fsize / 1024 / 1024" | bc
 echo `sha256sum "guifuyoal.exe"`
 
-# read -p "Press [Enter] key to start backup..."
+# read -p "Press [Enter] key to start exit..."
