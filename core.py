@@ -125,7 +125,7 @@ class edcr():
                     chunk = infile.read(bs)
                     if(len(chunk) == 0):
                         breakafter = True
-                        chunk = self.pad("",bs)
+                        chunk = self.pad(b"",bs)
                     elif(len(chunk) % bs != 0):
                         breakafter = True
                         chunk = self.pad(chunk,bs)

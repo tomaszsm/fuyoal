@@ -7,6 +7,7 @@ clean:
 	-rm fuyoal.spec
 	-rm core.pyc
 	-rm guifuyoal.spec
+	-rm fuyoal_source.tar
 
 fuyoal.exe: fuyoal.py core.py
 	-rm -r dist

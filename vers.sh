@@ -1,5 +1,4 @@
 #!/bin/bash
-cd d:/projekty/python/fuyoal
 
 echo fuyoal_source.tar.gz
 fsize=$(stat -c%s "fuyoal_source.tar.gz")
