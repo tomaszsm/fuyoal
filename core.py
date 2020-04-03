@@ -114,7 +114,6 @@ class edcr():
         key = self.hash_key(keya,self.hashfactor)
         iv = Random.new().read(AES.block_size)
         cipher = AES.new(key, AES.MODE_CBC, iv)
-        filesize = os.path.getsize(filein)
         breakafter = False
         with open(filein, 'rb') as infile:
             with open(fileout, 'wb') as outfile:
