@@ -1,5 +1,24 @@
 # fuyoal
 
+## About Fuyoal
+
+In many countries [key disclosure](https://en.wikipedia.org/wiki/Key_disclosure_law) law requires individuals to reveal their encryption keys to police and other law enforcement agencies. Non-compliance may result in serious repercussions. One way to handle this intrusion is to conceal some content in a way preventing any proof of its existence.
+
+[Deniable encryption](https://en.wikipedia.org/wiki/Deniable_encryption) refers to a situation when an adversary cannot prove that concealed content exists. The most commonly discussed form of deniable encryption is steganography. It is a technique fit for some purposes, but inadequate for general use. Firstly, because it usually takes much larger content to hide the target one. Secondly, because pure steganography dos not fulfill [Kerckhoffs's principle](https://en.wikipedia.org/wiki/Kerckhoffs%27s_principle).
+
+Alternative approach consist in hiding secret content along with evident albeit encrypted content. In an ideal situation the concealed content is hidden perfectly i.e., an adversary has no means of finding out that the secret part exists. However there is generally no way of decrypting one ciphertext into two sets of plain content if the key is shorter than the content. The strategy adopted by Fuyoal is a little different. If it is impossible to make single file and facade-concealed pair indistinguishable by making them look like single file, let us make them indistinguishable by making everything look like facade-concealed pairs. Thus Fuyoal transforms each single file and each facade-concealed pair of files into one encrypted file that reveals no information whether the second of its two volumes is real message or random blather.
+
+Most of versatile deniable encryption tools include low level hiding techniques like creating multiple encrypted disk volumes within a container volume. These tools are difficult to use in portable form or in general without deep integration with computer operational system. Fuyoal encrypts and decrypts selected files without any demanding system dependencies. It also does not leave any tracks in operational system other than the ones left by ordinary file manipulation.
+
+## Working
+
+Fuyoal encrypts two volumes of data (using AES-256) with two keys and concatenates them together. The encrypted file contains information about the size of the first volume in order make it possible to separate one of the volumes. The first volume is always the real file to be encrypted, the second one can be either another file or a block of zeros encrypted with a random key. The output file has the following structure:
+
+| Size of first volume (8 B) | IV 1 (16 B) | Key verification constant 1 (32 B) | Encrypted file 1 | Padding 1 (1-32 B) | IV 2 (16 B) | Key verification constant 2 (32 B) | Encrypted file 2 | Padding 2 (1-32 B) |
+|----------------------------|-------------|------------------------------------|------------------|--------------------|-------------|------------------------------------|------------------|--------------------|
+
+When decrypting, provided key is tested on the first key verification constant. If its validity is proven the key is used to decrypt the first volume. If the key does not fit, it is tested on the second key verification constant. If it appears to be valid, the second volume is decrypted. If it does not, the decryption fails.
+
 Each key is hashed (using SHA-256) one milion times before aplying to hinder possible bruteforce attack on a key.
 
 ## License and Warranty
