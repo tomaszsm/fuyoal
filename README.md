@@ -1,4 +1,5 @@
 # fuyoal
+Deniable encryption software
 
 ## About Fuyoal
 
