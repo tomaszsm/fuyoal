@@ -1,6 +1,21 @@
 # fuyoal
 Deniable encryption software
 
+## Table of Contents
+1. [About Fuyoal](#about-fuyoal)
+1. [Working](#working)
+1. [License and Warranty](#license-and-warranty)
+1. [Known Liabilities](#known-liabilities)
+1. [Usage](#usage)
+	1. [Command Line Interface](#command-line-interface)
+		1.  [Details:](#details)
+	1.  [Graphical User Interface](#graphical-user-interface)
+1. [Screenshots](#screenshots)
+1. [Dependencies](#dependencies)
+1. [Download Windows Binnaries](#download-windows-binnaries)
+1. [Contact](#contact)
+
+
 ## About Fuyoal
 
 In many countries [key disclosure](https://en.wikipedia.org/wiki/Key_disclosure_law) law requires individuals to reveal their encryption keys to police and other law enforcement agencies. Non-compliance may result in serious repercussions. One way to handle this intrusion is to conceal some content in a way preventing any proof of its existence.
@@ -98,6 +113,14 @@ Using GUI version of the program is pretty self-explanatory (see screen).
 Running the program from source requires Python 3.x with [Cryptodome](https://pycryptodome.readthedocs.io/en/latest/) package. Besides that GUI version requires [wxPython](https://www.wxpython.org/) package.
 
 Windows binaries require Microsoft Windows operating system or emulator of it.
+
+## Download Windows Binnaries
+Windows precompiled binnaries can be download from here:
+
+| Resource               | File                                                             | Size     | Version |
+|------------------------|------------------------------------------------------------------|----------|---------|
+| Windows binaries (CLI) | [fuyoal.exe](http://tsmolen.eu/fuyoal/download/fuyoal.exe)       | 10.27 MB | 1.1     |
+| Windows binaries (GUI) | [guifuyoal.exe](http://tsmolen.eu/fuyoal/download/guifuyoal.exe) | 15.87 MB | 1.1     |
 
 ## Contact
 Contact the author via his [web page](http://tsmolen.eu/).
