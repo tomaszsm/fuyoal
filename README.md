@@ -53,6 +53,8 @@ Also:
 
 ![xkcd.com/538/](https://imgs.xkcd.com/comics/security.png)
 
+(https://xkcd.com/538/)
+
 ## Usage
 ### Command Line Interface
 
